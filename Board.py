@@ -3,12 +3,24 @@
 from Tile import Tile
 from Player import Player
 
+from termcolor import colored, cprint
+# https://pypi.python.org/pypi/termcolor
+
+
 class Board:
     tiles = [];
     height = 5;
     width = 8;
     maxPlayers = 4;
-    playerTokens = ["@", "#", "%", "$"];
+    playerTokens = [
+        colored("@", "green", attrs=["blink"]),
+        colored("#", "blue", attrs=["blink"]),
+        colored("%", "magenta", attrs=["blink"]),
+        colored("$", "yellow", attrs=["blink"])
+    ];
+
+    # collection of references to player objects
+    players = [];
 
     def __init__(self):
         # create an empty board
@@ -21,12 +33,11 @@ class Board:
         for i in range(0, self.maxPlayers):
             name = "Player " + str(i + 1);
             player = Player(name, self.playerTokens[i], True);
+            players.append(player);
             self.tiles[0].players.append(player);
 
-        playersArray = self.tiles[1].players;
-        # print(playersArray);
-        # playersArray.append(players[0]);
-        # self.tiles[0].players = players;
-        # print(self.tiles[0].players)
-        # print(self.tiles[1].players)
-        # print(self.tiles[2].players)
+        players[3].isActive = True;
+        self.tiles[1].portal = 5;
+        self.tiles[4].portal = 2;
+        self.tiles[2].portal = 28;
+        self.tiles[27].portal = 3;

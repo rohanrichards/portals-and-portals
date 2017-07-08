@@ -4,6 +4,9 @@ from Tile import Tile
 from Board import Board
 import sys
 
+from termcolor import colored, cprint
+# https://pypi.python.org/pypi/termcolor
+
 class TerminalDisplayManager:
     tileHeight = 4;
     tileWidth = 10;
@@ -12,7 +15,8 @@ class TerminalDisplayManager:
 
     # constructor
     def __init__(selfself):
-        print("Created a TerminalDisplayManager instance");
+        # print("Created a TerminalDisplayManager instance");
+        pass;
 
     def drawTile(self, row, tile):
         # draws the requested row number of the tile
@@ -22,15 +26,9 @@ class TerminalDisplayManager:
         #   tile=instance of a Tile object (Tile)
 
         tileCapRow = "---------";
-        playerString = "     ";
-        for player in tile.players:
-            playerString = player.token + playerString;
-            playerString = playerString[:len(playerString)-1] + playerString[len(playerString):];
-
-
-        playersRow = "|  "+ playerString + " ";
-        tileNumberRow = "|   " + str(tile.tileNumber) + self.tileNumberSpace(tile.tileNumber) + "   ";
-        portalRow = "|        ";
+        playersRow = self.generatePlayersRow(tile);
+        tileNumberRow = self.generateTileNumberRow(tile);
+        portalRow = self.generatePortalRow(tile);
 
         rows = [
             tileCapRow,
@@ -41,13 +39,48 @@ class TerminalDisplayManager:
 
         sys.stdout.write(rows[row]);
 
-    def tileNumberSpace(self, number):
+    def generatePlayersRow(self, tile):
+        # creates a string to represent the players in a tile
+        # has appropriate padding if there are no players present
+
+        playerString = "     ";
+        for player in tile.players:
+            if player.isActive:
+                playerString = colored(player.token, attrs=["reverse", "blink"]) + playerString;
+            else:
+                playerString = player.token + playerString;
+
+            playerString = playerString[:len(playerString)-1] + playerString[len(playerString):];
+
+        playersRow = "|  " + playerString + " ";
+        return playersRow;
+
+    def generatePortalRow(self, tile):
+        portalString = "    "
+        padding = " ";
+        symbol = "";
+        if tile.portal:
+            #if the tile has a portal
+            if tile.portal < tile.tileNumber:
+                # change the symbol if its leading backwards
+                symbol = colored("<-" + str(tile.portal), "red", "on_grey", attrs=["bold", "reverse"]);
+            else:
+                #symbol is forward and blue
+                symbol = colored("->" + str(tile.portal), "cyan", "on_grey", attrs=["bold", "reverse"]);
+            if tile.portal > 10:
+                padding = "";
+            portalString = symbol + padding;
+        return "|  " + portalString + "  "
+
+    def generateTileNumberRow(self, tile):
         # just returns a space if the number is smaller than 10
         # its padding for single digit numbers in the tile rendering
-        if number < 10:
-            return " ";
-        else:
-            return "";
+        padding = "";
+        if tile.tileNumber< 10:
+            padding = " ";
+
+        return "|   " + str(tile.tileNumber) + padding + "   ";
+
 
     def drawBoard(self, board):
         # draws the game board
