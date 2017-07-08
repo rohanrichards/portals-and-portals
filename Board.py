@@ -8,7 +8,7 @@ class Board:
     height = 5;
     width = 8;
     maxPlayers = 4;
-    playerTokens = ["@", "#", "%", "$"]
+    playerTokens = ["@", "#", "%", "$"];
 
     def __init__(self):
         # create an empty board
@@ -21,6 +21,12 @@ class Board:
         for i in range(0, self.maxPlayers):
             name = "Player " + str(i + 1);
             player = Player(name, self.playerTokens[i], True);
-            players.append(player);
+            self.tiles[0].players.append(player);
 
-        self.tiles[0].players = players;
+        playersArray = self.tiles[1].players;
+        # print(playersArray);
+        # playersArray.append(players[0]);
+        # self.tiles[0].players = players;
+        # print(self.tiles[0].players)
+        # print(self.tiles[1].players)
+        # print(self.tiles[2].players)

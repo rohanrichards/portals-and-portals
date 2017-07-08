@@ -38,7 +38,7 @@ class TerminalDisplayManager:
             tileNumberRow,
             portalRow
         ]
-        
+
         sys.stdout.write(rows[row]);
 
     def tileNumberSpace(self, number):
@@ -72,6 +72,8 @@ class TerminalDisplayManager:
                         self.drawTile(tileRow, board.tiles[index]);
                 sys.stdout.write("\n");
 
+# test code to just run through the methods
+# this wont exist in prod and will get called by the view class
 testClass = TerminalDisplayManager();
 testClass.drawBoard(Board())
 print("Player 1's turn (%)");
