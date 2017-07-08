@@ -36,8 +36,8 @@ class Board:
             players.append(player);
             self.tiles[0].players.append(player);
 
-        players[3].isActive = True;
-        self.tiles[1].portal = 5;
-        self.tiles[4].portal = 2;
-        self.tiles[2].portal = 28;
-        self.tiles[27].portal = 3;
+        # players[3].isActive = True;
+        # self.tiles[1].portal = 5;
+        # self.tiles[4].portal = 2;
+        # self.tiles[2].portal = 28;
+        # self.tiles[27].portal = 3;

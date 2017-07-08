@@ -14,7 +14,7 @@ class TerminalDisplayManager:
     innerTileWidth = 8;
 
     # constructor
-    def __init__(selfself):
+    def __init__(self):
         # print("Created a TerminalDisplayManager instance");
         pass;
 
@@ -107,8 +107,8 @@ class TerminalDisplayManager:
 
 # test code to just run through the methods
 # this wont exist in prod and will get called by the view class
-testClass = TerminalDisplayManager();
-testClass.drawBoard(Board())
-print("Player 1's turn (%)");
-print("1. Roll Dice");
-print("2. Quit Game");
+# testClass = TerminalDisplayManager();
+# testClass.drawBoard(Board())
+# print("Player 1's turn (%)");
+# print("1. Roll Dice");
+# print("2. Quit Game");
