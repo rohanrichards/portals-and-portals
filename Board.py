@@ -47,18 +47,12 @@ class Board:
 
         for i in range(0, self.maxPlayers):
             name = "Player " + str(i + 1);
-            player = Player(name, self.playerTokens[i], True);
+            player = Player(name, self.playerTokens[i], False);
             self.players.append(player);
             self.tiles[0].players.append(player);
 
-        self.players[1].isActive = True;
-
+        self.players[1].isActive = True
         self.setupPortals();
-        # self.tiles[1].portal = 5;
-        # self.tiles[4].portal = 2;
-        # self.tiles[2].portal = 28;
-        # self.tiles[27].portal = 3;
-        self.destroyPortalAtTile(self.tiles[5]);
 
 
     def setupPortals(self):
@@ -68,8 +62,6 @@ class Board:
             originTile.portal = portal;
             destinationTile = self.tiles[portal.destination];
             destinationTile.portal = portal;
-            # originTile.portal = destinationTile.tileNumber;
-            # destinationTile.portal = originTile.tileNumber;
 
     def destroyPortal(self, portal):
         origin = self.tiles[portal.origin];
