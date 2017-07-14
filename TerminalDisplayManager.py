@@ -126,10 +126,11 @@ class TerminalDisplayManager:
             selection = input();
             try:
                 option = menu["options"][int(selection) - 1];
-                option["method"]();
-                valid = True;
-            except Exception:
-                print("Selection not valid");
+            except IndexError as e:
+                print("Please make a valid menu selection");
+
+            option["method"]();
+            valid = True;
 
 # test code to just run through the methods
 # this wont exist in prod and will get called by the view class

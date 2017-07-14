@@ -24,3 +24,54 @@ class Model:
     def resetBoard(self):
         self.board = None;
         self.board = Board();
+
+    def movePlayerBySpaces(self, player, spaces):
+        print("Moving " + player.name + " by " + str(spaces) + " spaces!")
+        destIndex = player.location + spaces;
+        if destIndex >= 39:
+            destIndex = 39;
+        self.movePlayerToTile(player, destIndex);
+        self.portalCheck(player, destIndex);
+
+    def movePlayerToTile(self, player, index):
+        # move a player to a new tile
+        currentTile = self.board.tiles[player.location];
+        destinationTile = self.board.tiles[index];
+
+        #remove it from the current tile
+        currentTile.players.remove(player);
+        #add it to the new tile
+        destinationTile.players.append(player);
+        #update its local location variable
+        player.location = index;
+
+    def portalCheck(self, player, index):
+        if self.board.tiles[index].portal:
+            print("You found a portal here!")
+            portal = self.board.tiles[index].portal;
+            destination = portal.destination;
+            origin = portal.origin;
+
+            if(player.location == origin):
+                #player is at the head of the portal
+                self.movePlayerToTile(player, destination)
+                print("Phew! It was a shortcut!")
+            else:
+                self.movePlayerToTile(player, origin)
+                print("Oh no! It lead you backwards!")
+
+    def rollDice(self):
+        return 1;
+
+    def setNextActivePlayer(self):
+        playerIndex = 0;
+        nextPlayerIndex = 1;
+        for player in self.board.players:
+            if player.isActive:
+                if playerIndex == self.board.maxPlayers - 1:
+                    nextPlayerIndex = 0;
+                else:
+                    nextPlayerIndex = playerIndex + 1;
+                player.isActive = False;
+            playerIndex += 1;
+        self.board.players[nextPlayerIndex].isActive = True;

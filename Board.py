@@ -51,7 +51,7 @@ class Board:
             self.players.append(player);
             self.tiles[0].players.append(player);
 
-        self.players[1].isActive = True
+        self.players[0].isActive = True
         self.setupPortals();
 
 
