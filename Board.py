@@ -9,7 +9,9 @@ from termcolor import colored, cprint
 # https://pypi.python.org/pypi/termcolor
 
 class Board:
+    # the default portals for a new board
     portals = [
+        # portal format is origin, destination
         Portal(3, 7),
         Portal(6, 10),
         Portal(14, 23),
@@ -64,12 +66,15 @@ class Board:
             destinationTile.portal = portal;
 
     def destroyPortal(self, portal):
+        #helper function to cleanly remove a portal
         origin = self.tiles[portal.origin];
         dest = self.tiles[portal.destination];
         origin.portal = None;
         dest.portal = None;
 
     def destroyPortalAtTile(self, tile):
+        # helper function to cleanly remove a portal at a specific tile
+        # use this if you cant easily get a reference to the portal itself
         if(tile.portal):
             self.destroyPortal(tile.portal);
 

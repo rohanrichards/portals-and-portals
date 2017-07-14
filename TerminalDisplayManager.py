@@ -127,6 +127,7 @@ class TerminalDisplayManager:
             try:
                 option = menu["options"][int(selection) - 1];
             except IndexError as e:
+                # print(str(e));
                 print("Please make a valid menu selection");
 
             option["method"]();
