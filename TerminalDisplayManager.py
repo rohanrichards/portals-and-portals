@@ -24,7 +24,7 @@ class TerminalDisplayManager:
         # Params:
         #   row=the row of the tile to draw (int)
         #   tile=instance of a Tile object (Tile)
-
+        " "
         tileCapRow = "---------";
         playersRow = self.generatePlayersRow(tile);
         tileNumberRow = self.generateTileNumberRow(tile);
@@ -61,13 +61,24 @@ class TerminalDisplayManager:
         symbol = "";
         if tile.portal:
             #if the tile has a portal
-            if tile.portal < tile.tileNumber:
+
+            #because the two tiles share the same portal instance we need to find out
+            #if the tile is the origin or the destination and draw the right number
+            #and because tile index is zero based but tile number is not we need to +- 1
+            if tile.portal.origin == tile.tileNumber - 1:
+                #this means the tile is the origin so we want to draw out the destination of the portal
+                destinationName = tile.portal.destination + 1;
+            else:
+                #vice versa, must draw the origin of the portal
+                destinationName = tile.portal.origin + 1;
+
+            if tile.portal.destination < tile.tileNumber:
                 # change the symbol if its leading backwards
-                symbol = colored("<-" + str(tile.portal), "red", "on_grey", attrs=["bold", "reverse"]);
+                symbol = colored("<-" + str(destinationName), "red", "on_grey", attrs=["bold", "reverse"]);
             else:
                 #symbol is forward and blue
-                symbol = colored("->" + str(tile.portal), "cyan", "on_grey", attrs=["bold", "reverse"]);
-            if tile.portal > 10:
+                symbol = colored("->" + str(destinationName), "cyan", "on_grey", attrs=["bold", "reverse"]);
+            if tile.portal.destination > 10:
                 padding = "";
             portalString = symbol + padding;
         return "|  " + portalString + "  "
@@ -104,6 +115,23 @@ class TerminalDisplayManager:
                         index = col + (board.width * row);
                         self.drawTile(tileRow, board.tiles[index]);
                 sys.stdout.write("\n");
+
+    def drawMenu(self, menu):
+        valid = False;
+        while (valid != True):
+            print(menu["heading"]);
+            for index, option in enumerate(menu["options"]):
+                print(index + 1, option["name"])
+
+            selection = input();
+            try:
+                option = menu["options"][int(selection) - 1];
+            except IndexError as e:
+                # print(str(e));
+                print("Please make a valid menu selection");
+
+            option["method"]();
+            valid = True;
 
 # test code to just run through the methods
 # this wont exist in prod and will get called by the view class

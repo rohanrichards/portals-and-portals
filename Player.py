@@ -7,3 +7,4 @@ class Player:
         self.token = token;
         self.ai = ai;
         self.isActive = False;
+        self.location = 0;
