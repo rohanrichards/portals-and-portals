@@ -116,6 +116,21 @@ class TerminalDisplayManager:
                         self.drawTile(tileRow, board.tiles[index]);
                 sys.stdout.write("\n");
 
+    def drawMenu(self, menu):
+        valid = False;
+        while (valid != True):
+            print(menu["heading"]);
+            for index, option in enumerate(menu["options"]):
+                print(index + 1, option["name"])
+
+            selection = input();
+            try:
+                option = menu["options"][int(selection) - 1];
+                option["method"]();
+                valid = True;
+            except Exception:
+                print("Selection not valid");
+
 # test code to just run through the methods
 # this wont exist in prod and will get called by the view class
 # testClass = TerminalDisplayManager();

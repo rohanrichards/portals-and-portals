@@ -19,7 +19,6 @@ class Board:
         Portal(35, 38),
     ]
 
-    tiles = [];
     height = 5;
     width = 8;
     maxPlayers = 4;
@@ -30,24 +29,29 @@ class Board:
         colored("$", "yellow")
     ];
 
-    # collection of references to player objects
-    players = [];
+
+    # players = [];
 
     def __init__(self):
         # create an empty board
+        self.tiles = [];
+
+        # collection of references to player objects
+        # these same instances also exist inside Tile objects
+        self.players = [];
+
         tileNumber = 1;
         for y in range(0, self.width * self.height):
             self.tiles.append(Tile(tileNumber));
             tileNumber += 1;
 
-        players = [];
         for i in range(0, self.maxPlayers):
             name = "Player " + str(i + 1);
             player = Player(name, self.playerTokens[i], True);
-            players.append(player);
+            self.players.append(player);
             self.tiles[0].players.append(player);
 
-        players[0].isActive = True;
+        self.players[1].isActive = True;
 
         self.setupPortals();
         # self.tiles[1].portal = 5;
@@ -76,3 +80,9 @@ class Board:
     def destroyPortalAtTile(self, tile):
         if(tile.portal):
             self.destroyPortal(tile.portal);
+
+    def getActivePlayer(self):
+        #returns the currently active player
+        for player in self.players:
+            if player.isActive:
+                return player;
