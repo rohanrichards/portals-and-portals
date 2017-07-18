@@ -63,6 +63,10 @@ class Controller:
 
     def setupPlayers(self):
         print("setting up players");
+        #name = input(Please enter )
+        
+        #(self, name, token, ai):
+        
         self.view.drawMenu(self.mainMenu());
 
     def quitToMenu(self):
@@ -76,10 +80,12 @@ class Controller:
         self.gameInPlay = False;
 
     def takeTurn(self):
-        print("taking turn");
         spaces = self.model.rollDice();
+        print("taking turn - you rolled: " + str(spaces));
+        
         player = self.model.getActivePlayer();
         self.model.movePlayerBySpaces(player, spaces);
+        
         #end game check here
         self.model.setNextActivePlayer();
 
