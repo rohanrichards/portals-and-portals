@@ -49,7 +49,6 @@ class TerminalDisplayManager:
                 playerString = colored(player.token, attrs=["reverse", "blink"]) + playerString;
             else:
                 playerString = player.token + playerString;
-
             playerString = playerString[:len(playerString)-1] + playerString[len(playerString):];
 
         playersRow = "|  " + playerString + " ";
@@ -117,21 +116,28 @@ class TerminalDisplayManager:
                 sys.stdout.write("\n");
 
     def drawMenu(self, menu):
-        valid = False;
-        while (valid != True):
-            print(menu["heading"]);
-            for index, option in enumerate(menu["options"]):
-                print(index + 1, option["name"])
-
+       
+        print(menu["heading"]);
+        for index, option in enumerate(menu["options"]):
+            print(index + 1, option["name"])
+        print("\nPlease enter an option: ", end='')    
+        while True:
             selection = input();
             try:
-                option = menu["options"][int(selection) - 1];
-            except IndexError as e:
+                option = menu["options"][int(selection) -1];
+            except IndexError:
                 # print(str(e));
-                print("Please make a valid menu selection");
-
-            option["method"]();
-            valid = True;
+                print("Please make a valid menu selection: ", end='')
+                continue
+            except ValueError:
+                print("Please make a valid menu selection: ", end='')
+                continue
+            if int(selection) <= 0:
+                print("Please make a valid menu selection: ", end='')
+                continue
+            else:
+                break
+        option["method"]();
 
 # test code to just run through the methods
 # this wont exist in prod and will get called by the view class
