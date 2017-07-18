@@ -13,12 +13,12 @@ class Controller:
     }
 
     def endMenu(self): return {
-        "heading": ("Game Over!",
+        "heading": "Game Over!",
                     # to-do: game summary data
                     # who won
                     # total portals used
                     # total turns taken
-                    ),
+                    
         "options": [
             {"name": "Replay Game", "method": self.startGame},
             {"name": "Main Menu", "method": self.newGame},
@@ -62,11 +62,7 @@ class Controller:
                 self.view.drawMenu(self.gameMenu());
 
     def setupPlayers(self):
-        print("setting up players");
-        #name = input(Please enter )
-        
-        #(self, name, token, ai):
-        
+        print("setting up players");        
         self.view.drawMenu(self.mainMenu());
 
     def quitToMenu(self):
@@ -87,9 +83,12 @@ class Controller:
         self.model.movePlayerBySpaces(player, spaces);
         
         #end game check here
+        if player.location == 39: 
+            print("Winner winner chicken dinner! Congratulations " + player.name);
+            self.view.displayManager.drawBoard(self.model.board);
+            self.view.drawMenu(self.endMenu());
+            
         self.model.setNextActivePlayer();
-
-
 
 def main(argv):
     # print("Main ran")
