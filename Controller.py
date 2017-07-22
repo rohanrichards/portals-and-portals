@@ -91,7 +91,6 @@ class Controller:
         self.model.setNextActivePlayer();
 
 def main(argv):
-    # print("Main ran")
     controller = Controller();
 
 if __name__ == "__main__":
