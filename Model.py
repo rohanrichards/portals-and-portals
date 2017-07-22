@@ -14,6 +14,27 @@ class Model:
             if player.isActive:
                 return player;
 
+    def setHumanPlayers(self):
+        playerInput = self.countHumanPlayers()
+        playerInput = int(input('How many players (max {})?'.format(self.board.maxPlayers)))
+        while playerInput not in range(1, self.board.maxPlayers + 1):
+            playerInput = int(input('Try again. How many players (max {})?'.format(self.board.maxPlayers)))
+        if playerInput < self.countHumanPlayers():
+            for i in range(playerInput, self.board.maxPlayers):
+                # print(self.board.players[i].isActive)
+                self.board.players[i - 1].ai = True
+        elif playerInput > self.countHumanPlayers():
+            for i in range(0, playerInput):
+                self.board.players[i - 1].ai = False
+            # return self.board.players
+
+    def setHumanNames(self):
+        # print('setting up names')
+        for i in range(0, self.countHumanPlayers()):
+            self.board.players[i].name = input ('Player {} enter your name: '.format(self.board.players[i].name))
+            while len(self.board.players[i].name) not in range(1,21):
+                self.board.players[i].name = input('Must be between 1 and 21 characters. Player {} enter your name: '.format(self.board.players[i].name))
+
     def countHumanPlayers(self):
         # helper function to count the number of human players
         count = 0;
@@ -65,7 +86,7 @@ class Model:
 
     def rollDice(self):
         #randomisation of die roll returns between (1-6)
-        return randint(1,20);
+        return randint(1,6);
         #return 20;
     
     def setNextActivePlayer(self):

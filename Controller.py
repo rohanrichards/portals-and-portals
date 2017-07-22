@@ -52,6 +52,8 @@ class Controller:
         #main game loop
         #can be broken by setting self.gameInPlay to false
         self.gameInPlay = True;
+        self.model.setHumanNames()
+
         while self.gameInPlay:
             #draw the board
             self.view.displayManager.drawBoard(self.model.board);
@@ -62,7 +64,8 @@ class Controller:
                 self.view.drawMenu(self.gameMenu());
 
     def setupPlayers(self):
-        print("setting up players");        
+        # print("setting up players");
+        self.model.setHumanPlayers()
         self.view.drawMenu(self.mainMenu());
 
     def quitToMenu(self):
