@@ -1,4 +1,5 @@
 from Board import Board
+from random import randint
 
 class Model:
 
@@ -56,13 +57,17 @@ class Model:
                 #player is at the head of the portal
                 self.movePlayerToTile(player, destination)
                 print("Phew! It was a shortcut!")
+                print("You appeared at "+ str(destination+1))
             else:
                 self.movePlayerToTile(player, origin)
                 print("Oh no! It lead you backwards!")
+                print("You appeared at "+ str(origin+1))
 
     def rollDice(self):
-        return 1;
-
+        #randomisation of die roll returns between (1-6)
+        #return randint(1,6);
+        return 20;
+    
     def setNextActivePlayer(self):
         playerIndex = 0;
         nextPlayerIndex = 1;
