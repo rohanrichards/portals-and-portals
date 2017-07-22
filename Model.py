@@ -70,8 +70,8 @@ class Model:
 
     def rollDice(self):
         #randomisation of die roll returns between (1-6)
-        return randint(1,6);
-        #return 20;
+        return randint(1,30);
+        # return 15;
     
     def setNextActivePlayer(self):
         playerIndex = 0;
@@ -88,3 +88,13 @@ class Model:
 
     def randomizePortalsTest(self):
         self.board.tryRandomizePortals();
+
+    def resetTokens(self):
+        for player in self.board.players:
+            self.movePlayerToTile(player, 0);
+
+    def resetActivePlayer(self):
+        #just resets the active player back to player 1
+        for player in self.board.players:
+            player.isActive = False;
+        self.board.players[0].isActive = True;

@@ -20,7 +20,7 @@ class Controller:
                     # total turns taken
                     
         "options": [
-            {"name": "Replay Game", "method": self.startGame},
+            {"name": "Replay Game", "method": self.replayGame},
             {"name": "Main Menu", "method": self.newGame},
             {"name": "Quit Game", "method": self.quitGame}
         ]
@@ -47,6 +47,14 @@ class Controller:
     def newGame(self):
         self.model.resetBoard();
         self.view.drawMenu(self.mainMenu());
+
+    def replayGame(self):
+        #resets the position of all players to the first tile
+        #resets the active player to the first player in the players array
+        #starts a game again without going to the main menu
+        self.model.resetTokens();
+        self.model.resetActivePlayer();
+        self.startGame();
 
     def startGame(self):
         #main game loop
