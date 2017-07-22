@@ -84,7 +84,7 @@ RESET = '\033[0m'
 
 
 def colored(text, color=None, on_color=None, attrs=None):
-    return text
+    #return text
     """Colorize text.
 
     Available text colors:
