@@ -65,7 +65,7 @@ class Model:
 
     def rollDice(self):
         #randomisation of die roll returns between (1-6)
-        #return randint(1,6);
+        return randint(1,10);
         return 20;
     
     def setNextActivePlayer(self):
