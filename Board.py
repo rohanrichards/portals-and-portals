@@ -90,8 +90,9 @@ class Board:
     def tryRandomizePortals(self):
         # roll a dice to see if its time to randomize the portals
         roll = randint(0,100);
-        print("Chance to randomize portals: " + str(roll));
+        # print("Chance to randomize portals: " + str(roll));
         if(roll <= self.randomizePortalsChance):
+            print("The portals are shifting!")
             self.randomizePortals();
 
     def randomizePortals(self):

@@ -4,39 +4,6 @@ from Model import Model
 from View import View
 
 class Controller:
-    def gameMenu(self): return {
-        "heading": "It is " + self.model.getActivePlayer().name + "'s turn ("
-                   + self.model.getActivePlayer().token + ")",
-        "options": [
-            {"name": "Roll Dice", "method": self.takeTurn},
-            {"name": "Quit Game", "method": self.quitToMenu}
-        ]
-    }
-
-    def endMenu(self): return {
-        "heading": "Game Over!",
-                    # to-do: game summary data
-                    # who won
-                    # total portals used
-                    # total turns taken
-                    
-        "options": [
-            {"name": "Replay Game", "method": self.replayGame},
-            {"name": "Main Menu", "method": self.newGame},
-            {"name": "Quit Game", "method": self.quitGame}
-        ]
-    }
-
-    def mainMenu(self): return {
-        "heading": ("Welcome to Portals and Portals!\n"
-                    "Players: " + str(self.model.countHumanPlayers())),
-        "options": [
-            {"name": "Start Game", "method": self.startGame},
-            {"name": "Setup Players", "method": self.setupPlayers},
-            {"name": "Quit Game", "method": self.quitGame}
-        ]
-    }
-
     def __init__(self):
         textDisplayManager = TerminalDisplayManager();
         self.model = Model(self);
@@ -47,7 +14,9 @@ class Controller:
 
     def newGame(self):
         self.model.resetBoard();
-        self.view.drawMenu(self.mainMenu());
+        self.view.setScene("mainMenu");
+        self.view.updateView();
+        # self.view.drawMenu(self.mainMenu());
 
     def replayGame(self):
         #resets the position of all players to the first tile
@@ -61,18 +30,14 @@ class Controller:
         #main game loop
         #can be broken by setting self.gameInPlay to false
         self.gameInPlay = True;
+        self.view.setScene("gameBoard");
         while self.gameInPlay:
-            #draw the board
-            self.view.displayManager.drawBoard(self.model.board);
-            if self.model.board.getActivePlayer().ai:
-                self.takeTurn();
-            else:
-                #draw the menu (get input)
-                self.view.drawMenu(self.gameMenu());
+            self.view.updateView();
 
     def setupPlayers(self):
-        print("setting up players");        
-        self.view.drawMenu(self.mainMenu());
+        print("setting up players");
+        self.view.setScene("playerSetup");
+        self.view.updateView();
 
     def quitToMenu(self):
         print("quitting to main menu");
@@ -94,11 +59,25 @@ class Controller:
         #end game check here
         if player.location == 39: 
             print("Winner winner chicken dinner! Congratulations " + player.name);
-            self.view.displayManager.drawBoard(self.model.board);
-            self.view.drawMenu(self.endMenu());
+            self.view.setScene("endGame")
+            self.view.updateView();
+            # self.view.displayManager.drawBoard(self.model.board);
+            # self.view.drawMenu(self.endMenu());
             
         self.model.setNextActivePlayer();
         self.model.randomizePortalsTest();
+
+    def activePlayer(self):
+        return self.model.getActivePlayer();
+
+    def countHumanPlayers(self):
+        return self.model.countHumanPlayers();
+
+    def getGameBoard(self):
+        return self.model.board;
+
+    def isActivePlayerAi(self):
+        return self.model.board.getActivePlayer().ai;
 
 def main(argv):
     controller = Controller();

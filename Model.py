@@ -27,8 +27,12 @@ class Model:
         self.board = Board();
 
     def movePlayerBySpaces(self, player, spaces):
+        if (player.location + spaces + 1) >= 40:
+            moveTile = 40;
+        else:
+            moveTile = player.location + spaces + 1
         print("Moving " + player.name + " from tile " +str(player.location + 1) + " to tile " +
-              str(player.location + spaces + 1))
+              str( moveTile ))
         destIndex = player.location + spaces;
         if destIndex >= 39:
             destIndex = 39;
