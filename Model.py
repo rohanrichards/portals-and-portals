@@ -27,7 +27,8 @@ class Model:
         self.board = Board();
 
     def movePlayerBySpaces(self, player, spaces):
-        print("Moving " + player.name + " by " + str(spaces) + " spaces!")
+        print("Moving " + player.name + " from tile " +str(player.location + 1) + " to tile " +
+              str(player.location + spaces + 1))
         destIndex = player.location + spaces;
         if destIndex >= 39:
             destIndex = 39;
@@ -50,7 +51,7 @@ class Model:
         #checks if a player has landed on a portal
         #moves them through the portal if they have
         if self.board.tiles[index].portal:
-            print("You found a portal here!")
+            print("You slipped into a portal!")
             portal = self.board.tiles[index].portal;
             destination = portal.destination;
             origin = portal.origin;
@@ -60,13 +61,13 @@ class Model:
                 #so we move them to the portals destination
                 self.movePlayerToTile(player, destination)
                 print("Phew! It was a shortcut!")
-                print("You appeared at "+ str(destination+1))
+                print("You appeared at tile "+ str(destination+1))
             else:
                 #player is at the tail of the portal
                 #so we have to move them to the origin
                 self.movePlayerToTile(player, origin)
                 print("Oh no! It lead you backwards!")
-                print("You appeared at "+ str(origin+1))
+                print("You appeared at tile "+ str(origin+1))
 
     def rollDice(self):
         #randomisation of die roll returns between (1-6)

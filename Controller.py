@@ -5,7 +5,8 @@ from View import View
 
 class Controller:
     def gameMenu(self): return {
-        "heading": "It is " + self.model.getActivePlayer().name + "'s turn",
+        "heading": "It is " + self.model.getActivePlayer().name + "'s turn ("
+                   + self.model.getActivePlayer().token + ")",
         "options": [
             {"name": "Roll Dice", "method": self.takeTurn},
             {"name": "Quit Game", "method": self.quitToMenu}
@@ -85,7 +86,7 @@ class Controller:
 
     def takeTurn(self):
         spaces = self.model.rollDice();
-        print("taking turn - you rolled: " + str(spaces));
+        print("Taking your turn - you rolled a " + str(spaces));
         
         player = self.model.getActivePlayer();
         self.model.movePlayerBySpaces(player, spaces);
