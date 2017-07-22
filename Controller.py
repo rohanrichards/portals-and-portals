@@ -2,7 +2,7 @@ import sys
 from TerminalDisplayManager import TerminalDisplayManager
 from Model import Model
 from View import View
-
+# Temp comment
 class Controller:
     def gameMenu(self): return {
         "heading": "It is " + self.model.getActivePlayer().name + "'s turn",
