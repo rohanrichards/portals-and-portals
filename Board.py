@@ -2,6 +2,7 @@
 
 from Tile import *
 from Player import Player
+from random import randint
 
 import sys
 
@@ -31,7 +32,9 @@ class Board:
         colored("$", "yellow")
     ];
 
-
+    maxPortals = 6; #max portals ever possible on the board
+    minPortals = 2; #min portals ever possible on the board
+    randomizePortalsChance = 100; #the percent chance to randomize portals each turn
     # players = [];
 
     def __init__(self):
@@ -74,7 +77,7 @@ class Board:
 
     def destroyPortalAtTile(self, tile):
         # helper function to cleanly remove a portal at a specific tile
-        # use this if you cant easily get a reference to the portal itself
+        # use this if you cant easily get a reference to the portal itself (you only know where it is)
         if(tile.portal):
             self.destroyPortal(tile.portal);
 
@@ -83,3 +86,41 @@ class Board:
         for player in self.players:
             if player.isActive:
                 return player;
+
+    def tryRandomizePortals(self):
+        # roll a dice to see if its time to randomize the portals
+        roll = randint(0,100);
+        print("Chance to randomize portals: " + str(roll));
+        if(roll <= self.randomizePortalsChance):
+            self.randomizePortals();
+
+    def randomizePortals(self):
+        # randomizes all of the portals
+        # never call this directly, use tryRandomizePortals
+        self.portals = [];
+
+        #strip out all the old portals;
+        self.removeAllPortals();
+
+        numberOfPortals = randint(self.minPortals, self.maxPortals);
+        tileRange = (self.height * self.width) - 1; #minus one because we want to reference an array
+
+        for i in range(numberOfPortals):
+            firstEnd = randint(0,tileRange);
+            secondEnd = randint(0, tileRange);
+            if firstEnd < secondEnd:
+                portalHeadLocation = firstEnd;
+                portalTailLocation = secondEnd;
+            else:
+                portalHeadLocation = secondEnd;
+                portalTailLocation = firstEnd;
+
+            self.portals.append(Portal(portalHeadLocation, portalTailLocation));
+
+        self.setupPortals();
+
+
+    def removeAllPortals(self):
+        #remove every portal from the board
+        for tile in self.tiles:
+            self.destroyPortalAtTile(tile);

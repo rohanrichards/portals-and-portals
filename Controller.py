@@ -89,6 +89,7 @@ class Controller:
             self.view.drawMenu(self.endMenu());
             
         self.model.setNextActivePlayer();
+        self.model.randomizePortalsTest();
 
 def main(argv):
     controller = Controller();
