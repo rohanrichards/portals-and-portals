@@ -53,20 +53,20 @@ class Model:
             destination = portal.destination;
             origin = portal.origin;
 
-            if(player.location == origin):
+            if player.location == origin:
                 #player is at the head of the portal
                 self.movePlayerToTile(player, destination)
                 print("Phew! It was a shortcut!")
-                print("You appeared at "+ str(destination+1))
+                print("You appeared at " + str(destination+1))
             else:
                 self.movePlayerToTile(player, origin)
                 print("Oh no! It lead you backwards!")
-                print("You appeared at "+ str(origin+1))
+                print("You appeared at " + str(origin+1))
 
     def rollDice(self):
         #randomisation of die roll returns between (1-6)
-        return randint(1,20);
-        #return 20;
+        #return randint(1,6);
+        return 20;
     
     def setNextActivePlayer(self):
         playerIndex = 0;
