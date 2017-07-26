@@ -30,7 +30,7 @@ class Controller:
         #main game loop
         #can be broken by setting self.gameInPlay to false
         self.gameInPlay = True;
-        if self.getPlayersList()[0].numGamesPlayed == 0:
+        if self.model.firstGame == True:
             self.view.setScene("setNames");
             self.view.updateView();
         self.view.setScene("gameBoard");
@@ -63,10 +63,9 @@ class Controller:
         
         #end game check here
         if player.location == 39:
-            for i in range(len(self.getPlayersList())):
-                self.getPlayersList()[i].numGamesPlayed += 1;
+            self.model.firstGame = False;
             print("Winner winner chicken dinner! Congratulations " + player.name);
-            self.view.setScene("endGame")
+            self.view.setScene("endGame");
             self.view.updateView();
             # self.view.displayManager.drawBoard(self.model.board);
             # self.view.drawMenu(self.endMenu());
