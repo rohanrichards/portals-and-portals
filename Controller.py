@@ -65,6 +65,8 @@ class Controller:
 
     def setupPlayers(self):
         # print("setting up players");
+
+
         self.model.setHumanPlayers()
         self.view.drawMenu(self.mainMenu());
 
@@ -92,6 +94,10 @@ class Controller:
             self.view.drawMenu(self.endMenu());
             
         self.model.setNextActivePlayer();
+
+    def getPlayersList(self):
+        playersList = self.model.board.players
+        return playersList
 
 def main(argv):
     controller = Controller();

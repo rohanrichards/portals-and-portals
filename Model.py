@@ -15,18 +15,15 @@ class Model:
                 return player;
 
     def setHumanPlayers(self):
-        playerInput = self.countHumanPlayers()
-        playerInput = int(input('How many players (max {})?'.format(self.board.maxPlayers)))
-        while playerInput not in range(1, self.board.maxPlayers + 1):
-            playerInput = int(input('Try again. How many players (max {})?'.format(self.board.maxPlayers)))
-        if playerInput < self.countHumanPlayers():
-            for i in range(playerInput, self.board.maxPlayers):
-                # print(self.board.players[i].isActive)
-                self.board.players[i - 1].ai = True
-        elif playerInput > self.countHumanPlayers():
-            for i in range(0, playerInput):
-                self.board.players[i - 1].ai = False
-            # return self.board.players
+        userInput = self.countHumanPlayers()
+        userInput = int(input('How many players (max {})?'.format(self.board.maxPlayers)))
+        while userInput not in range(1, self.board.maxPlayers + 1):
+            userInput = int(input('Try again. How many players (max {})?'.format(self.board.maxPlayers)))
+        for i in range(len(self.board.players)):
+            if i < userInput:
+                self.board.players[i].ai = False
+            else:
+                self.board.players[i].ai = True
 
     def setHumanNames(self):
         # print('setting up names')
