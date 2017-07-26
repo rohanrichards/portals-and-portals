@@ -4,38 +4,6 @@ from Model import Model
 from View import View
 # Temp comment
 class Controller:
-    def gameMenu(self): return {
-        "heading": "It is " + self.model.getActivePlayer().name + "'s turn",
-        "options": [
-            {"name": "Roll Dice", "method": self.takeTurn},
-            {"name": "Quit Game", "method": self.quitToMenu}
-        ]
-    }
-
-    def endMenu(self): return {
-        "heading": "Game Over!",
-                    # to-do: game summary data
-                    # who won
-                    # total portals used
-                    # total turns taken
-                    
-        "options": [
-            {"name": "Replay Game", "method": self.startGame},
-            {"name": "Main Menu", "method": self.newGame},
-            {"name": "Quit Game", "method": self.quitGame}
-        ]
-    }
-
-    def mainMenu(self): return {
-        "heading": ("Welcome to Portals and Portals!\n"
-                    "Players: " + str(self.model.countHumanPlayers())),
-        "options": [
-            {"name": "Start Game", "method": self.startGame},
-            {"name": "Setup Players", "method": self.setupPlayers},
-            {"name": "Quit Game", "method": self.quitGame}
-        ]
-    }
-
     def __init__(self):
         textDisplayManager = TerminalDisplayManager();
         self.model = Model(self);
@@ -46,29 +14,30 @@ class Controller:
 
     def newGame(self):
         self.model.resetBoard();
-        self.view.drawMenu(self.mainMenu());
+        self.view.setScene("mainMenu");
+        self.view.updateView();
+        # self.view.drawMenu(self.mainMenu());
+
+    def replayGame(self):
+        #resets the position of all players to the first tile
+        #resets the active player to the first player in the players array
+        #starts a game again without going to the main menu
+        self.model.resetTokens();
+        self.model.resetActivePlayer();
+        self.startGame();
 
     def startGame(self):
         #main game loop
         #can be broken by setting self.gameInPlay to false
         self.gameInPlay = True;
-        self.model.setHumanNames()
-
+        self.view.setScene("gameBoard");
         while self.gameInPlay:
-            #draw the board
-            self.view.displayManager.drawBoard(self.model.board);
-            if self.model.board.getActivePlayer().ai:
-                self.takeTurn();
-            else:
-                #draw the menu (get input)
-                self.view.drawMenu(self.gameMenu());
+            self.view.updateView();
 
     def setupPlayers(self):
-        # print("setting up players");
-
-
-        self.model.setHumanPlayers()
-        self.view.drawMenu(self.mainMenu());
+        print("setting up players");
+        self.view.setScene("playerSetup");
+        self.view.updateView();
 
     def quitToMenu(self):
         print("quitting to main menu");
@@ -82,7 +51,7 @@ class Controller:
 
     def takeTurn(self):
         spaces = self.model.rollDice();
-        print("taking turn - you rolled: " + str(spaces));
+        print("Taking your turn - you rolled a " + str(spaces));
         
         player = self.model.getActivePlayer();
         self.model.movePlayerBySpaces(player, spaces);
@@ -90,10 +59,25 @@ class Controller:
         #end game check here
         if player.location == 39: 
             print("Winner winner chicken dinner! Congratulations " + player.name);
-            self.view.displayManager.drawBoard(self.model.board);
-            self.view.drawMenu(self.endMenu());
+            self.view.setScene("endGame")
+            self.view.updateView();
+            # self.view.displayManager.drawBoard(self.model.board);
+            # self.view.drawMenu(self.endMenu());
             
         self.model.setNextActivePlayer();
+        self.model.randomizePortalsTest();
+
+    def activePlayer(self):
+        return self.model.getActivePlayer();
+
+    def countHumanPlayers(self):
+        return self.model.countHumanPlayers();
+
+    def getGameBoard(self):
+        return self.model.board;
+
+    def isActivePlayerAi(self):
+        return self.model.board.getActivePlayer().ai;
 
     def getPlayersList(self):
         playersList = self.model.board.players
