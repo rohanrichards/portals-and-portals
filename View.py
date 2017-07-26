@@ -49,12 +49,30 @@ class View:
         self.displayManager.drawMenu(self.mainMenu());
 
     def drawPlayerSetupScreen(self):
-        print("this should draw the UI for setting up players");
+        userInput = int(input('How many players (max {})?'.format(self.controller.model.board.maxPlayers)));
+        while userInput not in range(1, self.controller.model.board.maxPlayers + 1):
+            userInput = int(input('Try again. How many players (max {})?'.format(self.controller.model.board.maxPlayers)));
+        for i in range(len(self.controller.getPlayersList())):
+            if i < userInput:
+                self.controller.model.board.players[i].ai = False;
+            else:
+                self.controller.model.board.players[i].ai = True;
+
+        # print("this should draw the UI for setting up players");
+
+    def drawPlayerNamesScreen(self):
+        # print('setting up names')
+        players = self.controller.getPlayersList()
+        for i in range(0, self.controller.model.countHumanPlayers()):
+            players[i].name = input ('Player {} enter your name: '.format(players[i].name))
+            while len(players[i].name) not in range(1,21):
+                players[i].name = input('Must be between 1 and 20 characters. Player {} enter your name: '.format(players[i].name))
+
 
     def drawGameScreen(self):
         self.displayManager.drawBoard(self.controller.getGameBoard());
         if self.controller.isActivePlayerAi():
-            self.controller.takeTurn;
+            self.controller.takeTurn();
         else:
             self.drawMenu(self.gameMenu())
 
@@ -72,6 +90,8 @@ class View:
             self.updateView = self.drawPlayerSetupScreen;
         elif sceneName == "gameBoard":
             self.updateView = self.drawGameScreen;
+        elif sceneName == "setNames":
+            self.updateView = self.drawPlayerNamesScreen;
         elif sceneName == "endGame":
             self.updateView = self.drawEndGameScreen;
         else:
