@@ -57,8 +57,7 @@ class Controller:
         self.model.movePlayerBySpaces(player, spaces);
         
         #end game check here
-        if player.location == 39: 
-            print("Winner winner chicken dinner! Congratulations " + player.name);
+        if player.location == 39:
             self.view.setScene("endGame")
             self.view.updateView();
             # self.view.displayManager.drawBoard(self.model.board);
