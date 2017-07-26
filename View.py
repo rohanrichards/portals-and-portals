@@ -54,7 +54,7 @@ class View:
     def drawGameScreen(self):
         self.displayManager.drawBoard(self.controller.getGameBoard());
         if self.controller.isActivePlayerAi():
-            self.controller.takeTurn;
+            self.controller.takeTurn();
         else:
             self.drawMenu(self.gameMenu())
 
