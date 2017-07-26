@@ -51,6 +51,7 @@ class Controller:
     def startGame(self):
         #main game loop
         #can be broken by setting self.gameInPlay to false
+        self.model.resetBoard()
         self.gameInPlay = True;
         while self.gameInPlay:
             #draw the board
@@ -83,12 +84,49 @@ class Controller:
         self.model.movePlayerBySpaces(player, spaces);
         
         #end game check here
-        if player.location == 39: 
-            print("Winner winner chicken dinner! Congratulations " + player.name);
+        if player.location == 39:
             self.view.displayManager.drawBoard(self.model.board);
+
+            #print("Turn count: \t {}".format(player.turncount))
+            #print("Portals:\t\t {}".format(player.portalsactivated))
+            #print("Tiles:\t\t\t {}".format(player.tilesmoved))
+            self.endGame(player)
+
+
+
             self.view.drawMenu(self.endMenu());
-            
+
         self.model.setNextActivePlayer();
+
+    def endGame(self, player):
+        print("\n\nWinner winner chicken dinner! Congratulations " + player.name);
+        print("\nGame Stats\n----------\n")
+
+        print("Player:\t", end="\t")
+        for p in self.model.board.players:
+            print(p.name, end="\t")
+
+        print("\nBot: \t", end="\t")
+        for p in self.model.board.players:
+            print(p.ai, end="\t\t")
+
+        print("\nTurns: \t", end="\t")
+        for p in self.model.board.players:
+            print(p.turncount, end="\t\t\t")
+
+        print("\nPortals: \t", end="")
+        for p in self.model.board.players:
+            print(p.portalsactivated, end="\t\t\t")
+
+        print("\nTiles: \t", end="\t")
+        for p in self.model.board.players:
+            print(p.tilesmoved, end="\t\t\t")
+
+        print("\nRemaining: ", end="\t")
+        for p in self.model.board.players:
+            print(39 - p.location, end="\t\t\t")
+
+        print("\n")
 
 def main(argv):
     controller = Controller();

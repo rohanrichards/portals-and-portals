@@ -24,11 +24,13 @@ class Model:
 
     def resetBoard(self):
         self.board = None;
+        self.turncount = 0;
         self.board = Board();
 
     def movePlayerBySpaces(self, player, spaces):
         print("Moving " + player.name + " by " + str(spaces) + " spaces!")
         destIndex = player.location + spaces;
+        player.tilesmoved = player.tilesmoved + spaces
         if destIndex >= 39:
             destIndex = 39;
         self.movePlayerToTile(player, destIndex);
@@ -45,29 +47,31 @@ class Model:
         destinationTile.players.append(player);
         #update its local location variable
         player.location = index;
+        player.turncount = player.turncount + 1;
 
     def portalCheck(self, player, index):
         if self.board.tiles[index].portal:
             print("You found a portal here!")
             portal = self.board.tiles[index].portal;
+            player.portalsactivated = player.portalsactivated + 1
             destination = portal.destination;
             origin = portal.origin;
 
-            if(player.location == origin):
+            if player.location == origin:
                 #player is at the head of the portal
                 self.movePlayerToTile(player, destination)
                 print("Phew! It was a shortcut!")
-                print("You appeared at "+ str(destination+1))
+                print("You appeared at " + str(destination+1))
             else:
                 self.movePlayerToTile(player, origin)
                 print("Oh no! It lead you backwards!")
-                print("You appeared at "+ str(origin+1))
+                print("You appeared at " + str(origin+1))
 
     def rollDice(self):
         #randomisation of die roll returns between (1-6)
         #return randint(1,6);
-        return 20;
-    
+        return 20
+
     def setNextActivePlayer(self):
         playerIndex = 0;
         nextPlayerIndex = 1;
