@@ -60,7 +60,7 @@ class Model:
             destination = portal.destination;
             origin = portal.origin;
 
-            if(player.location == origin):
+            if player.location == origin:
                 #player is at the head of the portal
                 #so we move them to the portals destination
                 self.movePlayerToTile(player, destination)
@@ -77,6 +77,7 @@ class Model:
         #randomisation of die roll returns between (1-6)
         return randint(1,30);
         # return 15;
+
     
     def setNextActivePlayer(self):
         playerIndex = 0;

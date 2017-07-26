@@ -5,6 +5,7 @@ from Player import Player
 from random import randint
 
 import sys
+from random import randint
 
 from termcolor import colored, cprint
 # https://pypi.python.org/pypi/termcolor
@@ -56,9 +57,9 @@ class Board:
             self.players.append(player);
             self.tiles[0].players.append(player);
 
-        self.players[0].isActive = True
+        #selects a random player to begin the game.
+        self.players[randint(0,3)].isActive = True
         self.setupPortals();
-
 
     def setupPortals(self):
         #iterate over portals collection and setup the tiles
