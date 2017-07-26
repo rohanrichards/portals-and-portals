@@ -19,12 +19,12 @@ class Model:
         # userInput = self.countHumanPlayers()
 
 
-    def setHumanNames(self):
-        # print('setting up names')
-        for i in range(0, self.countHumanPlayers()):
-            self.board.players[i].name = input ('Player {} enter your name: '.format(self.board.players[i].name))
-            while len(self.board.players[i].name) not in range(1,21):
-                self.board.players[i].name = input('Must be between 1 and 21 characters. Player {} enter your name: '.format(self.board.players[i].name))
+    # def setHumanNames(self):
+    #     # print('setting up names')
+    #     for i in range(0, self.countHumanPlayers()):
+    #         self.board.players[i].name = input ('Player {} enter your name: '.format(self.board.players[i].name))
+    #         while len(self.board.players[i].name) not in range(1,21):
+    #             self.board.players[i].name = input('Must be between 1 and 20 characters. Player {} enter your name: '.format(self.board.players[i].name))
 
     def countHumanPlayers(self):
         # helper function to count the number of human players

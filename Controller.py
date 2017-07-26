@@ -30,7 +30,7 @@ class Controller:
         #main game loop
         #can be broken by setting self.gameInPlay to false
         self.gameInPlay = True;
-        if self.model.board.players[0].name == "Player 1":
+        if self.getPlayersList()[0].numGamesPlayed == 0:
             self.view.setScene("setNames");
             self.view.updateView();
         self.view.setScene("gameBoard");
@@ -62,7 +62,9 @@ class Controller:
         self.model.movePlayerBySpaces(player, spaces);
         
         #end game check here
-        if player.location == 39: 
+        if player.location == 39:
+            for i in range(len(self.getPlayersList())):
+                self.getPlayersList()[i].numGamesPlayed += 1;
             print("Winner winner chicken dinner! Congratulations " + player.name);
             self.view.setScene("endGame")
             self.view.updateView();

@@ -8,3 +8,4 @@ class Player:
         self.ai = ai;
         self.isActive = False;
         self.location = 0;
+        self.numGamesPlayed = 0;
