@@ -48,6 +48,7 @@ class Model:
         print("Moving " + player.name + " from tile " +str(player.location + 1) + " to tile " +
               str( moveTile ));
         destIndex = player.location + spaces;
+        player.tilesmoved = player.tilesmoved + spaces;
         if destIndex >= 39:
             destIndex = 39;
         self.movePlayerToTile(player, destIndex);
@@ -64,6 +65,7 @@ class Model:
         destinationTile.players.append(player);
         #update its local location variable
         player.location = index;
+        player.turncount = player.turncount + 1;
 
     def portalCheck(self, player, index):
         #checks if a player has landed on a portal
@@ -71,6 +73,7 @@ class Model:
         if self.board.tiles[index].portal:
             print("You slipped into a portal!")
             portal = self.board.tiles[index].portal;
+            player.portalsactivated = player.portalsactivated + 1
             destination = portal.destination;
             origin = portal.origin;
 

@@ -78,6 +78,36 @@ class View:
 
     def drawEndGameScreen(self):
         self.displayManager.drawBoard(self.controller.getGameBoard());
+        player = self.controller.activePlayer()
+        print("\n\nWinner winner chicken dinner! Congratulations " + player.name);
+        print("\nGame Stats\n----------\n")
+
+        print("Player:\t", end="\t")
+        for p in self.controller.model.board.players:
+            print(p.name, end="\t")
+
+        print("\nBot: \t", end="\t")
+        for p in self.controller.model.board.players:
+            print(p.ai, end="\t\t")
+
+        print("\nTurns: \t", end="\t")
+        for p in self.controller.model.board.players:
+            print(p.turncount, end="\t\t\t")
+
+        print("\nPortals: \t", end="")
+        for p in self.controller.model.board.players:
+            print(p.portalsactivated, end="\t\t\t")
+
+        print("\nTiles: \t", end="\t")
+        for p in self.controller.model.board.players:
+            print(p.tilesmoved, end="\t\t\t")
+
+        print("\nRemaining: ", end="\t")
+        for p in self.controller.model.board.players:
+            print(39 - p.location, end="\t\t\t")
+
+        print("\n")
+
         self.drawMenu(self.endMenu());
 
     def setScene(self, sceneName):

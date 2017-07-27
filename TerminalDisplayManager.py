@@ -89,8 +89,19 @@ class TerminalDisplayManager:
         if tile.tileNumber< 10:
             padding = " ";
 
-        return "|   " + str(tile.tileNumber) + padding + "   ";
+        #Adds arrows next to the tile number to indicate direction of play.
+        if 0 < tile.tileNumber < 8 or 17 <= tile.tileNumber < 24 or 33 <= tile.tileNumber < 40:
+            return "|   " + str(tile.tileNumber) + padding + " ->";
+        elif 9 <= tile.tileNumber < 16 or 25 <= tile.tileNumber < 32:
+            return "|<- " + str(tile.tileNumber) + padding + "   ";
+        elif 16 == tile.tileNumber or tile.tileNumber == 32:
+            return "|v  " + str(tile.tileNumber) + padding + "   ";
+        elif tile.tileNumber == 40:
+            return "|   " + str(tile.tileNumber) + padding + " :)";
+        else:
+            return "|   " + str(tile.tileNumber) + padding + "  v";
 
+        #return "|   " + str(tile.tileNumber) + padding + "   ";
 
     def drawBoard(self, board):
         # draws the game board

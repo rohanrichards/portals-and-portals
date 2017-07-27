@@ -64,8 +64,8 @@ class Controller:
         #end game check here
         if player.location == 39:
             self.model.firstGame = False;
-            print("Winner winner chicken dinner! Congratulations " + player.name);
             self.view.setScene("endGame");
+
             self.view.updateView();
             # self.view.displayManager.drawBoard(self.model.board);
             # self.view.drawMenu(self.endMenu());
