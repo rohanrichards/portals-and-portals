@@ -31,7 +31,12 @@ class Controller:
         #can be broken by setting self.gameInPlay to false
         self.gameInPlay = True;
         if self.model.firstGame == True:
-            self.view.setScene("setNames");
+            for num in range(self.countHumanPlayers()):
+                self.view.setScene("setNames");
+                self.view.updateView(num);
+                self.view.setScene("setTokens")
+                self.view.updateView(num);
+            self.view.setScene("createAIPlayers");
             self.view.updateView();
         self.view.setScene("gameBoard");
         while self.gameInPlay:

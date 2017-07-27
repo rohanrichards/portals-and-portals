@@ -60,13 +60,48 @@ class View:
 
         # print("this should draw the UI for setting up players");
 
-    def drawPlayerNamesScreen(self):
-        # print('setting up names')
+    def drawPlayerNamesScreen(self, num):
+        # print('setting up names');
+        players = self.controller.getPlayersList();
+        # for i in range(0, self.controller.model.countHumanPlayers()):
+        players[num].name = input ('{} enter your name: '.format(players[num].name));
+        while len(players[num].name) not in range(1,21):
+            players[num].name = input('Must be between 1 and 20 characters. Player {} enter your name: '.format(players[num].name));
+
+    def drawTokenSelectionScreen(self, playersNum):
+        players = self.controller.getPlayersList();
+        tokens = self.controller.model.board.playerTokens;
+        selectedTokens = self.controller.model.selectedTokens;
+        print('{} select your game token: '.format(players[playersNum].name), end = '');
+        for i in range(len(tokens)):
+            if tokens[i] not in selectedTokens[:]:
+                print( '{} {}  ' .format((i + 1), tokens[i]) , end = '');
+            else:
+                print( '{} {}  ' .format((i + 1), '-') , end = '');
+        playerInput = int(input(':'));
+        while tokens[playerInput - 1] in selectedTokens[:]:
+            playerInput = int(input('Token {} is not available, try again'.format(tokens[playerInput - 1])));
+        players[playersNum].token = tokens[playerInput - 1];
+        print('{} has selected {}'.format((players[playersNum].name), players[playersNum].token));
+        selectedTokens.append(tokens[playerInput - 1]);
+
+    def drawAIPlayersScreen(self):
         players = self.controller.getPlayersList()
-        for i in range(0, self.controller.model.countHumanPlayers()):
-            players[i].name = input ('Player {} enter your name: '.format(players[i].name))
-            while len(players[i].name) not in range(1,21):
-                players[i].name = input('Must be between 1 and 20 characters. Player {} enter your name: '.format(players[i].name))
+        tokens = self.controller.model.board.playerTokens;
+        selectedTokens = self.controller.model.selectedTokens;
+        botNum = 1;
+        aiNumber = self.controller.countHumanPlayers();
+        for i in range(self.controller.model.board.maxPlayers):
+            if tokens[i] not in selectedTokens[:]:
+                players[aiNumber].token = tokens[i];
+                selectedTokens.append(tokens[i]);
+                players[aiNumber].name = "Bot " + str(botNum);
+                print('Player {} is now known as {}'.format(aiNumber + 1, players[aiNumber].name))
+                print('{} has been allocated {} for their game token '.format(players[aiNumber].name, players[aiNumber].token))
+            else:
+                continue;
+            aiNumber += 1;
+            botNum += 1
 
 
     def drawGameScreen(self):
@@ -122,6 +157,10 @@ class View:
             self.updateView = self.drawGameScreen;
         elif sceneName == "setNames":
             self.updateView = self.drawPlayerNamesScreen;
+        elif sceneName == "setTokens":
+            self.updateView = self.drawTokenSelectionScreen;
+        elif sceneName == "createAIPlayers":
+            self.updateView = self.drawAIPlayersScreen;
         elif sceneName == "endGame":
             self.updateView = self.drawEndGameScreen;
         else:

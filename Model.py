@@ -7,6 +7,7 @@ class Model:
         self.board = Board();
         self.controller = controller;
         self.firstGame = True;
+        self.selectedTokens = [];
         # print("board init")
 
     def getActivePlayer(self):
