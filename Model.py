@@ -6,6 +6,7 @@ class Model:
     def __init__(self, controller):
         self.board = Board();
         self.controller = controller;
+        self.firstGame = True;
         # print("board init")
 
     def getActivePlayer(self):
@@ -15,22 +16,16 @@ class Model:
                 return player;
 
     def setHumanPlayers(self):
-        userInput = self.countHumanPlayers()
-        userInput = int(input('How many players (max {})?'.format(self.board.maxPlayers)))
-        while userInput not in range(1, self.board.maxPlayers + 1):
-            userInput = int(input('Try again. How many players (max {})?'.format(self.board.maxPlayers)))
-        for i in range(len(self.board.players)):
-            if i < userInput:
-                self.board.players[i].ai = False
-            else:
-                self.board.players[i].ai = True
+        pass
+        # userInput = self.countHumanPlayers()
 
-    def setHumanNames(self):
-        # print('setting up names')
-        for i in range(0, self.countHumanPlayers()):
-            self.board.players[i].name = input ('Player {} enter your name: '.format(self.board.players[i].name))
-            while len(self.board.players[i].name) not in range(1,21):
-                self.board.players[i].name = input('Must be between 1 and 21 characters. Player {} enter your name: '.format(self.board.players[i].name))
+
+    # def setHumanNames(self):
+    #     # print('setting up names')
+    #     for i in range(0, self.countHumanPlayers()):
+    #         self.board.players[i].name = input ('Player {} enter your name: '.format(self.board.players[i].name))
+    #         while len(self.board.players[i].name) not in range(1,21):
+    #             self.board.players[i].name = input('Must be between 1 and 20 characters. Player {} enter your name: '.format(self.board.players[i].name))
 
     def countHumanPlayers(self):
         # helper function to count the number of human players
@@ -42,16 +37,20 @@ class Model:
 
     def resetBoard(self):
         self.board = None;
+<<<<<<< HEAD
         self.turncount = 0;
+=======
+        self.firstGame = True;
+>>>>>>> master
         self.board = Board();
 
     def movePlayerBySpaces(self, player, spaces):
         if (player.location + spaces + 1) >= 40:
             moveTile = 40;
         else:
-            moveTile = player.location + spaces + 1
+            moveTile = player.location + spaces + 1;
         print("Moving " + player.name + " from tile " +str(player.location + 1) + " to tile " +
-              str( moveTile ))
+              str( moveTile ));
         destIndex = player.location + spaces;
 
         player.tilesmoved = player.tilesmoved + spaces;

@@ -1,5 +1,5 @@
 class Portal:
-    # very simply class to define a portal as an object
+    # very simple class to define a portal as an object
     def __init__(self, origin, dest):
         self.origin = origin;
         self.destination = dest;

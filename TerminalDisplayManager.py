@@ -74,11 +74,14 @@ class TerminalDisplayManager:
             if tile.portal.destination < tile.tileNumber:
                 # change the symbol if its leading backwards
                 symbol = colored("<-" + str(destinationName), "red", "on_grey", attrs=["bold", "reverse"]);
+                if tile.portal.origin > 9:
+                    padding = "";
             else:
                 #symbol is forward and blue
                 symbol = colored("->" + str(destinationName), "cyan", "on_grey", attrs=["bold", "reverse"]);
-            if tile.portal.destination > 10:
-                padding = "";
+                if tile.portal.destination > 9:
+                    padding = "";
+
             portalString = symbol + padding;
         return "|  " + portalString + "  "
 
@@ -89,8 +92,19 @@ class TerminalDisplayManager:
         if tile.tileNumber< 10:
             padding = " ";
 
-        return "|   " + str(tile.tileNumber) + padding + "   ";
+        #Adds arrows next to the tile number to indicate direction of play.
+        if 0 < tile.tileNumber < 8 or 17 <= tile.tileNumber < 24 or 33 <= tile.tileNumber < 40:
+            return "|   " + str(tile.tileNumber) + padding + " ->";
+        elif 9 <= tile.tileNumber < 16 or 25 <= tile.tileNumber < 32:
+            return "|<- " + str(tile.tileNumber) + padding + "   ";
+        elif 16 == tile.tileNumber or tile.tileNumber == 32:
+            return "|v  " + str(tile.tileNumber) + padding + "   ";
+        elif tile.tileNumber == 40:
+            return "|   " + str(tile.tileNumber) + padding + " :)";
+        else:
+            return "|   " + str(tile.tileNumber) + padding + "  v";
 
+        #return "|   " + str(tile.tileNumber) + padding + "   ";
 
     def drawBoard(self, board):
         # draws the game board

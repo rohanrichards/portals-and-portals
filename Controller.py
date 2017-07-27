@@ -31,13 +31,18 @@ class Controller:
         #can be broken by setting self.gameInPlay to false
         self.model.resetBoard()
         self.gameInPlay = True;
+        if self.model.firstGame == True:
+            self.view.setScene("setNames");
+            self.view.updateView();
         self.view.setScene("gameBoard");
         while self.gameInPlay:
             self.view.updateView();
 
     def setupPlayers(self):
-        print("setting up players");
+        # print("setting up players");
         self.view.setScene("playerSetup");
+        self.view.updateView();
+        self.view.setScene("mainMenu");
         self.view.updateView();
 
     def quitToMenu(self):
@@ -60,13 +65,19 @@ class Controller:
         
         #end game check here
         if player.location == 39:
-            self.view.setScene("endGame")
+            self.model.firstGame = False;
+            self.view.setScene("endGame");
+
             self.view.updateView();
             # self.view.displayManager.drawBoard(self.model.board);
             # self.view.drawMenu(self.endMenu());
 
+<<<<<<< HEAD
         player = self.activePlayer()
         player.turncount = player.turncount + 1;
+=======
+
+>>>>>>> master
         self.model.setNextActivePlayer();
         self.model.randomizePortalsTest();
 
@@ -83,8 +94,8 @@ class Controller:
         return self.model.board.getActivePlayer().ai;
 
     def getPlayersList(self):
-        playersList = self.model.board.players
-        return playersList
+        return self.model.board.players
+
 
     def endGame(self, player):
         print("\n\nWinner winner chicken dinner! Congratulations " + player.name);
