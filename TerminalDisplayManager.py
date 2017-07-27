@@ -127,7 +127,6 @@ class TerminalDisplayManager:
                 sys.stdout.write("\n");
 
     def drawMenu(self, menu):
-       
         print(menu["heading"]);
         for index, option in enumerate(menu["options"]):
             print(index + 1, option["name"])

@@ -8,3 +8,6 @@ class Player:
         self.ai = ai;
         self.isActive = False;
         self.location = 0;
+        self.turncount = 0;
+        self.portalsactivated = 0;
+        self.tilesmoved = 0;
