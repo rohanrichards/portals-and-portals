@@ -52,37 +52,46 @@ class View:
         userInput = int(input('How many players (max {})?'.format(self.controller.model.board.maxPlayers)));
         while userInput not in range(1, self.controller.model.board.maxPlayers + 1):
             userInput = int(input('Try again. How many players (max {})?'.format(self.controller.model.board.maxPlayers)));
-        for i in range(len(self.controller.getPlayersList())):
-            if i < userInput:
-                self.controller.model.board.players[i].ai = False;
-            else:
-                self.controller.model.board.players[i].ai = True;
+            for i in range(len(self.controller.getPlayersList())):
+                if i < userInput:
+                    self.controller.model.board.players[i].ai = False;
+                else:
+                    self.controller.model.board.players[i].ai = True;
 
         # print("this should draw the UI for setting up players");
 
-    def drawPlayerNamesScreen(self, num):
-        # print('setting up names');
+    def drawPlayerNamesScreen(self, playersNum):
         players = self.controller.getPlayersList();
-        # for i in range(0, self.controller.model.countHumanPlayers()):
-        players[num].name = input ('{} enter your name: '.format(players[num].name));
-        while len(players[num].name) not in range(1,21):
-            players[num].name = input('Must be between 1 and 20 characters. Player {} enter your name: '.format(players[num].name));
+        players[playersNum].name = input ('{} enter your name: '.format(players[playersNum].name));
+        while len(players[playersNum].name) not in range(1, 21):
+            players[playersNum].name = input('Must be between 1 and 20 characters. Player {} enter your name: '.format(players[playersNum].name));
 
     def drawTokenSelectionScreen(self, playersNum):
         players = self.controller.getPlayersList();
         tokens = self.controller.model.board.playerTokens;
         selectedTokens = self.controller.model.selectedTokens;
-        print('{} select your game token: '.format(players[playersNum].name), end = '');
+
+        print("{} select your game token: ".format(players[playersNum].name), end = '');
         for i in range(len(tokens)):
             if tokens[i] not in selectedTokens[:]:
-                print( '{} {}  ' .format((i + 1), tokens[i]) , end = '');
+                print( "{}>{}  " .format((i + 1), tokens[i]) , end = '');
             else:
-                print( '{} {}  ' .format((i + 1), '-') , end = '');
-        playerInput = int(input(':'));
-        while tokens[playerInput - 1] in selectedTokens[:]:
-            playerInput = int(input('Token {} is not available, try again'.format(tokens[playerInput - 1])));
-        players[playersNum].token = tokens[playerInput - 1];
-        print('{} has selected {}'.format((players[playersNum].name), players[playersNum].token));
+                print( "{}>{}  " .format((i + 1), '-') , end = '');
+        print(":", end = "")
+        while True:
+            try:
+                playerInput = int(input(""));
+                while tokens[playerInput - 1] in selectedTokens[:]:
+                    playerInput = int(input('Token {} is not available, try again:'.format(tokens[playerInput - 1])));
+                players[playersNum].token = tokens[playerInput - 1];
+                break
+            except IndexError:
+                print("Please make a valid menu selection: ", end='')
+                continue
+            except ValueError:
+                print("Please make a valid menu selection: ", end='')
+                continue
+        print("{} has selected {}".format((players[playersNum].name), players[playersNum].token));
         selectedTokens.append(tokens[playerInput - 1]);
 
     def drawAIPlayersScreen(self):
