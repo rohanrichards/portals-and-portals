@@ -74,7 +74,8 @@ class Controller:
             self.view.updateView();
             # self.view.displayManager.drawBoard(self.model.board);
             # self.view.drawMenu(self.endMenu());
-            
+
+
         self.model.setNextActivePlayer();
         self.model.randomizePortalsTest();
 
