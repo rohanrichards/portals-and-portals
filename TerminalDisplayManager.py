@@ -152,6 +152,35 @@ class TerminalDisplayManager:
                 break
         option["method"]();
 
+    def drawEndGameScenario(self, playerlist, player):
+        maxlength = max(max(len(p.name) for p in playerlist), 8)+2
+
+
+        print("\n\nWinner winner chicken dinner! Congratulations " + player.name);
+        print("\nGame Stats\n----------\n")
+
+        print("Player:\t", end="\t")
+        for p in playerlist:
+            print("{0:>{1}}".format(p.name, maxlength), end='')
+
+        print("\nTurns: \t", end="\t")
+        for p in playerlist:
+            print("{0:{1}}".format(p.turncount, maxlength), end='')
+
+        print("\nPortals: \t", end="")
+        for p in playerlist:
+            print("{0:{1}}".format(p.portalsactivated, maxlength), end='')
+
+        print("\nTiles: \t", end="\t")
+        for p in playerlist:
+            print("{0:{1}}".format(p.tilesmoved, maxlength), end='')
+
+        print("\nRemaining: ", end="\t")
+        for p in playerlist:
+            print("{0:{1}}".format(39 - p.location, maxlength), end='')
+
+        print("\n")
+
 # test code to just run through the methods
 # this wont exist in prod and will get called by the view class
 # testClass = TerminalDisplayManager();

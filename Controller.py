@@ -60,7 +60,7 @@ class Controller:
         print("Taking your turn - you rolled a " + str(spaces));
         
         player = self.model.getActivePlayer();
-
+        player.turncount = player.turncount + 1;
         self.model.movePlayerBySpaces(player, spaces);
         
         #end game check here
@@ -71,13 +71,8 @@ class Controller:
             self.view.updateView();
             # self.view.displayManager.drawBoard(self.model.board);
             # self.view.drawMenu(self.endMenu());
-
-<<<<<<< HEAD
         player = self.activePlayer()
-        player.turncount = player.turncount + 1;
-=======
 
->>>>>>> master
         self.model.setNextActivePlayer();
         self.model.randomizePortalsTest();
 
@@ -96,36 +91,6 @@ class Controller:
     def getPlayersList(self):
         return self.model.board.players
 
-
-    def endGame(self, player):
-        print("\n\nWinner winner chicken dinner! Congratulations " + player.name);
-        print("\nGame Stats\n----------\n")
-
-        print("Player:\t", end="\t")
-        for p in self.model.board.players:
-            print(p.name, end="\t")
-
-        print("\nBot: \t", end="\t")
-        for p in self.model.board.players:
-            print(p.ai, end="\t\t")
-
-        print("\nTurns: \t", end="\t")
-        for p in self.model.board.players:
-            print(p.turncount, end="\t\t\t")
-
-        print("\nPortals: \t", end="")
-        for p in self.model.board.players:
-            print(p.portalsactivated, end="\t\t\t")
-
-        print("\nTiles: \t", end="\t")
-        for p in self.model.board.players:
-            print(p.tilesmoved, end="\t\t\t")
-
-        print("\nRemaining: ", end="\t")
-        for p in self.model.board.players:
-            print(39 - p.location, end="\t\t\t")
-
-        print("\n")
 
 def main(argv):
     controller = Controller();

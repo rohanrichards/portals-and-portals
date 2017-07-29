@@ -37,11 +37,7 @@ class Model:
 
     def resetBoard(self):
         self.board = None;
-<<<<<<< HEAD
-        self.turncount = 0;
-=======
         self.firstGame = True;
->>>>>>> master
         self.board = Board();
 
     def movePlayerBySpaces(self, player, spaces):
@@ -98,8 +94,7 @@ class Model:
 
     def rollDice(self):
         #randomisation of die roll returns between (1-6)
-        return randint(1,30);
-        # return 15;
+        return randint(1, 6);
 
 
     def setNextActivePlayer(self):
