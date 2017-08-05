@@ -13,11 +13,6 @@ class View:
     def endMenu(self):
         return {
             "heading": "Game Over!",
-            # to-do: game summary data
-            # who won
-            # total portals used
-            # total turns taken
-
             "options": [
                 {"name": "Replay Game", "method": self.controller.replayGame},
                 {"name": "Main Menu", "method": self.controller.newGame},
@@ -49,11 +44,21 @@ class View:
         self.displayManager.drawMenu(self.mainMenu());
 
     def drawPlayerSetupScreen(self):
-        userInput = int(input('How many players (max {})?'.format(self.controller.model.board.maxPlayers)));
-        while userInput not in range(1, self.controller.model.board.maxPlayers + 1):
-            userInput = int(input('Try again. How many players (max {})?'.format(self.controller.model.board.maxPlayers)));
+        while True:
+            userInput = input('How many players (0 - {})?'.format(self.controller.model.board.maxPlayers));
+            try:
+                int(userInput)
+            except ValueError:
+                print("Please make a valid menu selection: ", end='')
+                continue
+            if int(userInput) not in range(0, self.controller.model.board.maxPlayers + 1):
+                print("Please make a valid menu selection: ", end='')
+                continue
+            else:
+                break
+
         for i in range(len(self.controller.getPlayersList())):
-            if i < userInput:
+            if i < int(userInput):
                 self.controller.model.board.players[i].ai = False;
             else:
                 self.controller.model.board.players[i].ai = True;
@@ -65,13 +70,15 @@ class View:
         players = self.controller.getPlayersList()
         for i in range(0, self.controller.model.countHumanPlayers()):
             players[i].name = input ('Player {} enter your name: '.format(players[i].name))
-            while len(players[i].name) not in range(1,21):
-                players[i].name = input('Must be between 1 and 20 characters. Player {} enter your name: '.format(players[i].name))
+            while len(players[i].name) not in range(1,11):
+                players[i].name = input('Must be between 1 and 10 characters. Player {} enter your name: '.format(players[i].name))
 
 
     def drawGameScreen(self):
         self.displayManager.drawBoard(self.controller.getGameBoard());
         if self.controller.isActivePlayerAi():
+            print("It is " + self.controller.activePlayer().name + "'s turn ("
+            + self.controller.activePlayer().token + ")")
             self.controller.takeTurn();
         else:
             self.drawMenu(self.gameMenu())
@@ -84,7 +91,12 @@ class View:
 
         print("Player:\t", end="\t")
         for p in self.controller.model.board.players:
-            print(p.name, end="\t")
+            padding = ""
+            nameLen = len(p.name)
+            if(nameLen < 10):
+                for j in range(0, 10-nameLen):
+                    padding = padding + " "
+            print(p.name + padding, end="\t")
 
         print("\nBot: \t", end="\t")
         for p in self.controller.model.board.players:

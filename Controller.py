@@ -60,19 +60,21 @@ class Controller:
         
         player = self.model.getActivePlayer();
         self.model.movePlayerBySpaces(player, spaces);
-        
+
         #end game check here
         if player.location == 39:
             self.model.firstGame = False;
             self.view.setScene("endGame");
-
             self.view.updateView();
             # self.view.displayManager.drawBoard(self.model.board);
             # self.view.drawMenu(self.endMenu());
-
+            return
 
         self.model.setNextActivePlayer();
         self.model.randomizePortalsTest();
+
+        if player.ai:
+            input("Press Enter to continue...")
 
     def activePlayer(self):
         return self.model.getActivePlayer();
