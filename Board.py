@@ -3,6 +3,8 @@
 from Tile import *
 from Player import Player
 from random import randint
+from random import sample
+
 
 import sys
 from random import randint
@@ -106,10 +108,11 @@ class Board:
 
         numberOfPortals = randint(self.minPortals, self.maxPortals);
         tileRange = (self.height * self.width) - 1; #minus one because we want to reference an array
+        randomInts = sample(range(tileRange), (numberOfPortals * 2));
 
-        for i in range(numberOfPortals):
-            firstEnd = randint(0,tileRange);
-            secondEnd = randint(0, tileRange);
+        for i in range(1, (len(randomInts)), 2):
+            firstEnd = randomInts[i];
+            secondEnd = randomInts[i + 1];
             if firstEnd < secondEnd:
                 portalHeadLocation = firstEnd;
                 portalTailLocation = secondEnd;

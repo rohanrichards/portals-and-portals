@@ -74,12 +74,12 @@ class TerminalDisplayManager:
             if tile.portal.destination < tile.tileNumber:
                 # change the symbol if its leading backwards
                 symbol = colored("<-" + str(destinationName), "red", "on_grey", attrs=["bold", "reverse"]);
-                if tile.portal.origin > 9:
+                if tile.portal.origin > 8:
                     padding = "";
             else:
                 #symbol is forward and blue
                 symbol = colored("->" + str(destinationName), "cyan", "on_grey", attrs=["bold", "reverse"]);
-                if tile.portal.destination > 9:
+                if tile.portal.destination > 8:
                     padding = "";
 
             portalString = symbol + padding;

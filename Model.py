@@ -39,6 +39,7 @@ class Model:
     def resetBoard(self):
         self.board = None;
         self.firstGame = True;
+        self.selectedTokens = [];
         self.board = Board();
 
     def movePlayerBySpaces(self, player, spaces):
