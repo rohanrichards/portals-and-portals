@@ -6,7 +6,7 @@ class View:
                        + self.controller.activePlayer().token + ")",
             "options": [
                 {"name": "Roll Dice", "method": self.controller.takeTurn},
-                {"name": "Quit Game", "method": self.controller.quitToMenu}
+                {"name": "Quit to Menu", "method": self.controller.quitToMenu}
             ]
         }
 
@@ -60,14 +60,66 @@ class View:
 
         # print("this should draw the UI for setting up players");
 
-    def drawPlayerNamesScreen(self):
-        # print('setting up names')
-        players = self.controller.getPlayersList()
-        for i in range(0, self.controller.model.countHumanPlayers()):
-            players[i].name = input ('Player {} enter your name: '.format(players[i].name))
-            while len(players[i].name) not in range(1,21):
-                players[i].name = input('Must be between 1 and 20 characters. Player {} enter your name: '.format(players[i].name))
+    def drawPlayerNamesScreen(self, playersNum):
+        players = self.controller.getPlayersList();
+        players[playersNum].name = input ('{} enter your name: '.format(players[playersNum].name));
+        while len(players[playersNum].name) not in range(1, 21):
+            players[playersNum].name = input('Must be between 1 and 20 characters:');
 
+    def drawTokenSelectionScreen(self, playersNum):
+        players = self.controller.getPlayersList();
+        tokens = self.controller.model.board.playerTokens;
+        selectedTokens = self.controller.model.selectedTokens;
+
+        if playersNum == (self.controller.model.board.maxPlayers - 1):
+            for i in range(self.controller.model.board.maxPlayers - 1):
+                if tokens[i] not in selectedTokens[:]:
+                    players[playersNum].token = tokens[i];
+                    print('{} has been assigned {}'.format((players[playersNum].name), players[playersNum].token));
+        else:
+            print("{} select your game token: ".format(players[playersNum].name), end = '');
+            for i in range(len(tokens)):
+                if tokens[i] not in selectedTokens[:]:
+                    print( "{}>{}  " .format((i + 1), tokens[i]) , end = '');
+                else:
+                    print( "{}>{}  " .format((i + 1), '-') , end = '');
+            print(":", end = "")
+            while True:
+                try:
+                    playerInput = int(input(""));
+                    while tokens[playerInput - 1] in selectedTokens[:]:
+                        playerInput = int(input('Token {} is not available, try again:'.format(tokens[playerInput - 1])));
+                    players[playersNum].token = tokens[playerInput - 1];
+                    break
+                except IndexError:
+                    print("Please make a valid menu selection: ", end='')
+                    continue
+                except ValueError:
+                    print("Please make a valid menu selection: ", end='')
+                    continue
+            print("{} has selected {}".format((players[playersNum].name), players[playersNum].token));
+            selectedTokens.append(tokens[playerInput - 1]);
+
+    def drawAIPlayersScreen(self):
+        players = self.controller.getPlayersList()
+        tokens = self.controller.model.board.playerTokens;
+        selectedTokens = self.controller.model.selectedTokens;
+        botNum = 1;
+        aiNumber = self.controller.countHumanPlayers();
+        try:
+            for i in range(self.controller.model.board.maxPlayers):
+                if tokens[i] not in selectedTokens[:]:
+                    players[aiNumber].token = tokens[i];
+                    selectedTokens.append(tokens[i]);
+                    players[aiNumber].name = "Bot " + str(botNum);
+                    print('Player {} is now known as {}'.format(aiNumber + 1, players[aiNumber].name))
+                    print('{} has been allocated {} for their game token '.format(players[aiNumber].name, players[aiNumber].token))
+                else:
+                    continue;
+                aiNumber += 1;
+                botNum += 1;
+        except IndexError:
+            return
 
     def drawGameScreen(self):
         self.displayManager.drawBoard(self.controller.getGameBoard());
@@ -77,37 +129,10 @@ class View:
             self.drawMenu(self.gameMenu())
 
     def drawEndGameScreen(self):
-        self.displayManager.drawBoard(self.controller.getGameBoard());
+        playerlist = self.controller.getPlayersList()
         player = self.controller.activePlayer()
-        print("\n\nWinner winner chicken dinner! Congratulations " + player.name);
-        print("\nGame Stats\n----------\n")
-
-        print("Player:\t", end="\t")
-        for p in self.controller.model.board.players:
-            print(p.name, end="\t")
-
-        print("\nBot: \t", end="\t")
-        for p in self.controller.model.board.players:
-            print(p.ai, end="\t\t")
-
-        print("\nTurns: \t", end="\t")
-        for p in self.controller.model.board.players:
-            print(p.turncount, end="\t\t\t")
-
-        print("\nPortals: \t", end="")
-        for p in self.controller.model.board.players:
-            print(p.portalsactivated, end="\t\t\t")
-
-        print("\nTiles: \t", end="\t")
-        for p in self.controller.model.board.players:
-            print(p.tilesmoved, end="\t\t\t")
-
-        print("\nRemaining: ", end="\t")
-        for p in self.controller.model.board.players:
-            print(39 - p.location, end="\t\t\t")
-
-        print("\n")
-
+        self.displayManager.drawBoard(self.controller.getGameBoard());
+        self.displayManager.drawEndGameScenario(playerlist, player)
         self.drawMenu(self.endMenu());
 
     def setScene(self, sceneName):
@@ -122,6 +147,10 @@ class View:
             self.updateView = self.drawGameScreen;
         elif sceneName == "setNames":
             self.updateView = self.drawPlayerNamesScreen;
+        elif sceneName == "setTokens":
+            self.updateView = self.drawTokenSelectionScreen;
+        elif sceneName == "createAIPlayers":
+            self.updateView = self.drawAIPlayersScreen;
         elif sceneName == "endGame":
             self.updateView = self.drawEndGameScreen;
         else:

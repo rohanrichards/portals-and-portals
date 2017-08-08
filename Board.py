@@ -3,9 +3,12 @@
 from Tile import *
 from Player import Player
 from random import randint
+from random import sample
+
 
 import sys
 from random import randint
+from random import sample
 
 from termcolor import colored, cprint
 # https://pypi.python.org/pypi/termcolor
@@ -106,16 +109,19 @@ class Board:
 
         numberOfPortals = randint(self.minPortals, self.maxPortals);
         tileRange = (self.height * self.width) - 1; #minus one because we want to reference an array
+        portalRange = sample(range(0, tileRange), numberOfPortals * 2)
+        x = 0;
 
         for i in range(numberOfPortals):
-            firstEnd = randint(0,tileRange);
-            secondEnd = randint(0, tileRange);
+            firstEnd = portalRange[x]
+            secondEnd = portalRange[x+1]
             if firstEnd < secondEnd:
                 portalHeadLocation = firstEnd;
                 portalTailLocation = secondEnd;
             else:
                 portalHeadLocation = secondEnd;
                 portalTailLocation = firstEnd;
+            x = x + 2
 
             self.portals.append(Portal(portalHeadLocation, portalTailLocation));
 

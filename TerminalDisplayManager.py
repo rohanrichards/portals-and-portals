@@ -73,12 +73,19 @@ class TerminalDisplayManager:
 
             if tile.portal.destination < tile.tileNumber:
                 # change the symbol if its leading backwards
-                symbol = colored("<-" + str(destinationName), "red", "on_grey", attrs=["bold", "reverse"]);
+                if 0 <= tile.tileNumber <= 8 or 17 <= tile.tileNumber <= 24 or 33 <= tile.tileNumber <= 40:
+                    symbol = colored("<-" + str(destinationName), "red", "on_grey", attrs=["bold", "reverse"]);
+                else:
+                    symbol = colored("->" + str(destinationName), "red", "on_grey", attrs=["bold", "reverse"]);
+
                 if tile.portal.origin > 9:
                     padding = "";
             else:
                 #symbol is forward and blue
-                symbol = colored("->" + str(destinationName), "cyan", "on_grey", attrs=["bold", "reverse"]);
+                if 0 <= tile.tileNumber <= 8 or 17 <= tile.tileNumber <= 24 or 33 <= tile.tileNumber <= 40:
+                    symbol = colored("->" + str(destinationName), "cyan", "on_grey", attrs=["bold", "reverse"]);
+                else:
+                    symbol = colored("<-" + str(destinationName), "cyan", "on_grey", attrs=["bold", "reverse"]);
                 if tile.portal.destination > 9:
                     padding = "";
 
@@ -151,6 +158,35 @@ class TerminalDisplayManager:
             else:
                 break
         option["method"]();
+
+    def drawEndGameScenario(self, playerlist, player):
+        maxlength = max(max(len(p.name) for p in playerlist), 8)+2
+
+
+        print("\n\nWinner winner chicken dinner! Congratulations " + player.name);
+        print("\nGame Stats\n----------\n")
+
+        print("Player:\t", end="\t")
+        for p in playerlist:
+            print("{0:>{1}}".format(p.name, maxlength), end='')
+
+        print("\nTurns: \t", end="\t")
+        for p in playerlist:
+            print("{0:{1}}".format(p.turncount, maxlength), end='')
+
+        print("\nPortals: \t", end="")
+        for p in playerlist:
+            print("{0:{1}}".format(p.portalsactivated, maxlength), end='')
+
+        print("\nTiles: \t", end="\t")
+        for p in playerlist:
+            print("{0:{1}}".format(p.tilesmoved, maxlength), end='')
+
+        print("\nRemaining: ", end="\t")
+        for p in playerlist:
+            print("{0:{1}}".format(39 - p.location, maxlength), end='')
+
+        print("\n")
 
 # test code to just run through the methods
 # this wont exist in prod and will get called by the view class
