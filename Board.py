@@ -38,7 +38,7 @@ class Board:
 
     maxPortals = 6; #max portals ever possible on the board
     minPortals = 2; #min portals ever possible on the board
-    randomizePortalsChance = 100; #the percent chance to randomize portals each turn
+    randomizePortalsChance = 30; #the percent chance to randomize portals each turn
     # players = [];
 
     def __init__(self):
