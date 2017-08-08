@@ -50,7 +50,9 @@ class Model:
         print("Moving " + player.name + " from tile " +str(player.location + 1) + " to tile " +
               str( moveTile ));
         destIndex = player.location + spaces;
+
         player.tilesmoved = player.tilesmoved + spaces;
+
         if destIndex >= 39:
             destIndex = 39;
         self.movePlayerToTile(player, destIndex);
@@ -67,7 +69,6 @@ class Model:
         destinationTile.players.append(player);
         #update its local location variable
         player.location = index;
-        player.turncount = player.turncount + 1;
 
     def portalCheck(self, player, index):
         #checks if a player has landed on a portal
@@ -90,12 +91,13 @@ class Model:
                 #so we have to move them to the origin
                 self.movePlayerToTile(player, origin)
                 print("Oh no! It lead you backwards!")
+
                 print("You appeared at tile "+ str(origin+1))
 
     def rollDice(self):
         #randomisation of die roll returns between (1-6)
-        return randint(1,30);
-        # return 15;
+        return randint(1, 6);
+
 
     def setNextActivePlayer(self):
         playerIndex = 0;

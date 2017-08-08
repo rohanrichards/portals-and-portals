@@ -29,6 +29,7 @@ class Controller:
     def startGame(self):
         #main game loop
         #can be broken by setting self.gameInPlay to false
+        self.model.resetBoard()
         self.gameInPlay = True;
         if self.model.firstGame == True:
             for num in range(self.countHumanPlayers()):
@@ -64,6 +65,7 @@ class Controller:
         print("Taking your turn - you rolled a " + str(spaces));
         
         player = self.model.getActivePlayer();
+        player.turncount = player.turncount + 1;
         self.model.movePlayerBySpaces(player, spaces);
         
         #end game check here
@@ -74,7 +76,7 @@ class Controller:
             self.view.updateView();
             # self.view.displayManager.drawBoard(self.model.board);
             # self.view.drawMenu(self.endMenu());
-
+        player = self.activePlayer()
 
         self.model.setNextActivePlayer();
         self.model.randomizePortalsTest();
