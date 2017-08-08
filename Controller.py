@@ -13,12 +13,14 @@ class Controller:
         self.newGame();
 
     def newGame(self):
+        print("new game was called")
         self.model.resetBoard();
         self.view.setScene("mainMenu");
         self.view.updateView();
         # self.view.drawMenu(self.mainMenu());
 
     def replayGame(self):
+        print("replay game was called")
         #resets the position of all players to the first tile
         #resets the active player to the first player in the players array
         #starts a game again without going to the main menu
@@ -29,8 +31,9 @@ class Controller:
     def startGame(self):
         #main game loop
         #can be broken by setting self.gameInPlay to false
-        self.model.resetBoard()
+        # self.model.resetBoard()
         self.gameInPlay = True;
+        print(self.model.firstGame);
         if self.model.firstGame == True:
             for num in range(self.countHumanPlayers()):
                 self.view.setScene("setNames");
@@ -72,10 +75,10 @@ class Controller:
         if player.location == 39:
             self.model.firstGame = False;
             self.view.setScene("endGame");
-
             self.view.updateView();
             # self.view.displayManager.drawBoard(self.model.board);
             # self.view.drawMenu(self.endMenu());
+
         player = self.activePlayer()
 
         self.model.setNextActivePlayer();

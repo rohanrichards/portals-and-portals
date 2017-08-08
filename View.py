@@ -43,7 +43,10 @@ class View:
         # self.controller.testPresence();
 
     def drawMenu(self, menu):
-        self.displayManager.drawMenu(menu);
+        if self.controller.isActivePlayerAi():
+            self.controller.takeTurn;
+        else:
+            self.displayManager.drawMenu(menu);
 
     def drawMainScreen(self):
         self.displayManager.drawMenu(self.mainMenu());
