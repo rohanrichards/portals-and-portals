@@ -42,8 +42,8 @@ class View:
         self.updateView = self.drawMainScreen;
         # self.controller.testPresence();
 
-    def drawMenu(self, menu):
-        self.displayManager.drawMenu(menu);
+    # def drawMenu(self, menu):
+    #     self.displayManager.drawMenu(menu);
 
     def drawMainScreen(self):
         self.displayManager.drawSplashScreen(self.mainMenu());

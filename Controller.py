@@ -1,16 +1,20 @@
 import sys
 from TerminalDisplayManager import TerminalDisplayManager
+from GraphicalDisplayManager import GraphicalDisplayManager
 from Model import Model
 from View import View
 # Temp comment
 class Controller:
     def __init__(self):
         textDisplayManager = TerminalDisplayManager();
+        guiDisplayManager = GraphicalDisplayManager();
         self.model = Model(self);
-        self.view = View(textDisplayManager, self);
+        # self.view = View(textDisplayManager, self);
+        self.view = View(guiDisplayManager, self);
         self.gameInPlay = False;
 
-        self.newGame();
+        # self.newGame();
+        self.setupPlayers()
 
     def newGame(self):
         self.model.resetBoard();
