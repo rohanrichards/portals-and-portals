@@ -30,17 +30,15 @@ class Controller:
     def startGame(self):
         #main game loop
         #can be broken by setting self.gameInPlay to false
-        # self.model.resetBoard()
         self.gameInPlay = True;
-        print(self.model.firstGame);
-        if self.model.firstGame == True:
-            for num in range(self.countHumanPlayers()):
-                self.view.setScene("setNames");
-                self.view.updateView(num);
-                self.view.setScene("setTokens")
-                self.view.updateView(num);
-            self.view.setScene("createAIPlayers");
-            self.view.updateView();
+        # if self.model.firstGame == True:
+        #     for num in range(self.countHumanPlayers()):
+        #         self.view.setScene("setNames");
+        #         self.view.updateView(num);
+        #         self.view.setScene("setTokens")
+        #         self.view.updateView(num);
+        #     self.view.setScene("createAIPlayers");
+        #     self.view.updateView();
         self.view.setScene("gameBoard");
         while self.gameInPlay:
             self.view.updateView();
