@@ -24,6 +24,7 @@ class Controller:
         #starts a game again without going to the main menu
         self.model.resetTokens();
         self.model.resetActivePlayer();
+        self.model.resetPlayerStats();
         self.startGame();
 
     def startGame(self):
