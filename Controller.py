@@ -9,12 +9,12 @@ class Controller:
         textDisplayManager = TerminalDisplayManager();
         guiDisplayManager = GraphicalDisplayManager();
         self.model = Model(self);
-        # self.view = View(textDisplayManager, self);
-        self.view = View(guiDisplayManager, self);
+        self.view = View(textDisplayManager, self);
+        # self.view = View(guiDisplayManager, self);
         self.gameInPlay = False;
 
-        # self.newGame();
-        self.setupPlayers()
+        self.newGame();
+        # self.setupPlayers()
 
     def newGame(self):
         self.model.resetBoard();
@@ -49,6 +49,7 @@ class Controller:
 
     def setupPlayers(self):
         # print("setting up players");
+        self.model.resetPlayers();
         self.view.setScene("playerSetup");
         self.view.updateView();
         self.view.setScene("mainMenu");

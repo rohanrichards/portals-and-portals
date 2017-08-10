@@ -130,3 +130,6 @@ class Model:
             player.portalsactivated = 0;
             player.tilesmoved = 0;
             player.turncount = 0;
+
+    def resetPlayers(self):
+        self.resetBoard()
