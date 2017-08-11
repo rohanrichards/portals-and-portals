@@ -1,103 +1,165 @@
 from tkinter import *
 from tkinter import ttk
+from Dialog import *
 
 class GraphicalDisplayManager:
 
     def __init__(self):
-        pass
+        self.root = Tk()
+        self.splashFrame = None
+
+        self.tokenImages = [
+            "./images/playerTokens/playerTokens_blueDisc.png",
+            "./images/playerTokens/playerTokens_boomerangePrawn.png",
+            "./images/playerTokens/playerTokens_casinoChip.png",
+            "./images/playerTokens/playerTokens_orangeDisc.png",
+            "./images/playerTokens/playerTokens_purpleDisc.png",
+            "./images/playerTokens/playerTokens_sherriffStar.png",
+            "./images/playerTokens/playerTokens_yellowDisc.png",
+        ]
 
     def drawSplashScreen(self, menuOptions):
-        print("draw the splash screen")
-#         to-do Shawn
+        if self.splashFrame:
+            self.splashFrame.destroy()
 
+        self.root.title("Portals and Portals")
+
+        self.splashFrame = Frame(self.root)
+        self.splashFrame.pack()
+
+        image = PhotoImage(file="PortalsSplash.PNG")
+        lblPhoto = Label(self.splashFrame, image=image)
+        lblPhoto.pack()
+
+        bottomFrame = Frame(self.splashFrame)
+        bottomFrame.pack(side=BOTTOM)
+
+        btnStart = Button(bottomFrame, text="New Game", fg="red", command=lambda: menuOptions["options"][0]["method"]())
+        btnStart.pack(side=LEFT)
+
+        btnPlayers = Button(bottomFrame, text="Set Up Players", fg="red",
+                            command=lambda: menuOptions["options"][1]["method"]())
+        btnPlayers.pack(side=LEFT)
+
+        btnQuit = Button(bottomFrame, text="Exit", fg="black", command=self.root.quit)
+        btnQuit.pack(side=LEFT)
+
+        self.root.mainloop()
+
+        # while True:
+        #     self.root.update()
+        #     self.root.update_idletasks()
+
+        # menuOptions["options"][1]["method"]()
 
     def drawPlayerSetupScreen(self, maxPlayers, playersList, tokens, selectedTokens):
         self.setNumberOfPlayers(maxPlayers, playersList)
         self.setNameAndTokens(playersList, tokens, selectedTokens)
 
     def setNumberOfPlayers(self, maxPlayers, playersList):
-        def setNumPlayers(number):
-            for index, player in enumerate(playersList):
-                if index < number:
-                    print("set player to non-ai")
-                    player.ai = False
-                else:
-                    print("set player to ai")
-                    player.ai = True
-            root.destroy()
+        d = SetPlayersDialog(self.root, "How many players?")
 
-        root = Tk()
-        root.title("Setup Game")
+        for index, player in enumerate(playersList):
+            if index < d.result:
+                print("set player to non-ai")
+                player.ai = False
+            else:
+                print("set player to ai")
+                player.ai = True
+        #
+        # mainFrame = ttk.Frame(root, padding="10 10 10 10")
+        # mainFrame.grid(column=0, row=0, sticky=(N, W, E, S))
+        # mainFrame.columnconfigure(0, weight=1)
+        # mainFrame.rowconfigure(0, weight=1)
+        #
+        # ttk.Label(mainFrame, text="How many players?").grid(column=0, row=0, sticky=(W, E))
+        # buttonFrame = ttk.Frame(mainFrame, padding="10 10 10 10")
+        # buttonFrame.grid(column=0, row=3)
+        #
+        # # draw the tokens
+        # for i in range(1, maxPlayers+1):
+        #         b = ttk.Button(buttonFrame, text=i,
+        #                        command=lambda number=i: setNumPlayers(number))
+        #         b.grid(column=i, row=0)
 
-        mainFrame = ttk.Frame(root, padding="10 10 10 10")
-        mainFrame.grid(column=0, row=0, sticky=(N, W, E, S))
-        mainFrame.columnconfigure(0, weight=1)
-        mainFrame.rowconfigure(0, weight=1)
-
-        ttk.Label(mainFrame, text="How many players?").grid(column=0, row=0, sticky=(W, E))
-        buttonFrame = ttk.Frame(mainFrame, padding="10 10 10 10")
-        buttonFrame.grid(column=0, row=3)
-
-        # draw the tokens
-        for i in range(1, maxPlayers+1):
-                b = ttk.Button(buttonFrame, text=i,
-                               command=lambda number=i: setNumPlayers(number))
-                b.grid(column=i, row=0)
-
-        root.mainloop()
+        # root.mainloop()
 
     def setNameAndTokens(self, playersList, tokens, selectedTokens):
-        def setToken(player, name, token):
-            print("selected token" + token)
-            print(player.name)
-            player.name = name
-            player.token = token
-            selectedTokens.append(token)
-            print("added to selected tokens")
-            print(selectedTokens)
-            root.destroy()
 
-        for player in playersList:
+        for index, player in enumerate(playersList):
             if player.ai == False:
-                root = Tk()
-                root.title("Setup " + player.name)
 
-                mainFrame = ttk.Frame(root, padding="10 10 10 10")
-                mainFrame.grid(column=0, row=0, sticky=(N, W, E, S))
-                mainFrame.columnconfigure(0, weight=1)
-                mainFrame.rowconfigure(0, weight=1)
+                d = SelectTokensDialog(self.root, "Setup Players",
+                               data={"tokens": tokens, "selectedTokens": selectedTokens, "images": self.tokenImages })
+                print(d.result)
+                player.name = d.result[0]
+                player.token = d.result[1]
+                selectedTokens.append(d.result[2])
+                print("added to selected tokens")
+                print(selectedTokens)
 
-                nameEntry = ttk.Entry(mainFrame, width=7)
-                nameEntry.grid(column=0, row=1, sticky=(W, E))
-                ttk.Label(mainFrame, text="Enter your name").grid(column=0, row=0, sticky=(W, E))
-
-                ttk.Label(mainFrame, text="Select your token").grid(column=0, row=2, sticky=(W, E))
-                tokenFrame = ttk.Frame(mainFrame, padding="10 10 10 10")
-                tokenFrame.grid(column=0, row=3)
-
-                #draw the tokens
-                for index, token in enumerate(tokens):
-                    if token not in selectedTokens:
-                        print("token found: " + token)
-                        b = ttk.Button(tokenFrame, text=token, command=lambda token=token: setToken(player, nameEntry.get(), token))
-                        b.grid(column=index, row=0)
-
-                root.mainloop()
             else:
                 player.name = "Bot " + str(index)
                 print('Player {} is now known as {}'.format(index + 1, player.name))
-                for token in tokens:
+                for index, token in enumerate(tokens):
                     if token not in selectedTokens:
-                        player.token = token;
+                        player.token = index;
                         selectedTokens.append(token);
                         print('{} has been allocated {} for their game token '.format(player.name,
                                                                                       player.token))
                         break
 
-    def drawBoard(self, menuOptions=None, isAi=False):
-        pass
+        # for player in playersList:
+        #     if player.ai == False:
+        #         root = Tk()
+        #         root.title("Setup " + player.name)
+        #
+        #         mainFrame = ttk.Frame(root, padding="10 10 10 10")
+        #         mainFrame.grid(column=0, row=0, sticky=(N, W, E, S))
+        #         mainFrame.columnconfigure(0, weight=1)
+        #         mainFrame.rowconfigure(0, weight=1)
+        #
+        #         nameEntry = ttk.Entry(mainFrame, width=7)
+        #         nameEntry.grid(column=0, row=1, sticky=(W, E))
+        #         ttk.Label(mainFrame, text="Enter your name").grid(column=0, row=0, sticky=(W, E))
+        #
+        #         ttk.Label(mainFrame, text="Select your token").grid(column=0, row=2, sticky=(W, E))
+        #         tokenFrame = ttk.Frame(mainFrame, padding="10 10 10 10")
+        #         tokenFrame.grid(column=0, row=3)
+        #
+        #         #draw the tokens
+        #         for index, token in enumerate(tokens):
+        #             if token not in selectedTokens:
+        #                 print("token found: " + token)
+        #                 b = ttk.Button(tokenFrame, text=token, command=lambda token=token: setToken(player, nameEntry.get(), token))
+        #                 b.grid(column=index, row=0)
+        #
+        #         root.mainloop()
+        #     else:
+        #         player.name = "Bot " + str(index)
+        #         print('Player {} is now known as {}'.format(index + 1, player.name))
+        #         for token in tokens:
+        #             if token not in selectedTokens:
+        #                 player.token = token;
+        #                 selectedTokens.append(token);
+        #                 print('{} has been allocated {} for their game token '.format(player.name,
+        #                                                                               player.token))
+        #                 break
+
+    def drawBoard(self, board, menuOptions=None, isAi=False):
+        print("drawing game board with GUI")
+        if self.splashFrame:
+            self.splashFrame.destroy()
+
+        self.root.title("Portals and Portals")
+
+        self.splashFrame = Frame(self.root)
+        self.splashFrame.pack()
+
+        self.root.mainloop()
 
     def drawEndGameScenario(self, playerList, player, menuOptions):
+        print("drawing end game with GUI")
         pass
 
 

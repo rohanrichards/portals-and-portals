@@ -2,9 +2,6 @@
 
 from Tile import *
 from Player import Player
-from random import randint
-from random import sample
-
 
 import sys
 from random import randint
@@ -33,7 +30,10 @@ class Board:
         colored("@", "green"),
         colored("#", "blue"),
         colored("%", "magenta"),
-        colored("$", "yellow")
+        colored("$", "yellow"),
+        colored("&", "red"),
+        colored("*", "cyan"),
+        colored("!", "white"),
     ];
 
     maxPortals = 6; #max portals ever possible on the board

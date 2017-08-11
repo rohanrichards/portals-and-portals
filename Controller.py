@@ -1,16 +1,20 @@
 import sys
+import random
 from TerminalDisplayManager import TerminalDisplayManager
 from GraphicalDisplayManager import GraphicalDisplayManager
 from Model import Model
 from View import View
 # Temp comment
 class Controller:
-    def __init__(self):
-        textDisplayManager = TerminalDisplayManager();
-        guiDisplayManager = GraphicalDisplayManager();
+    def __init__(self, graphical):
+
+        if graphical == True:
+            displayManager = GraphicalDisplayManager();
+        else:
+            displayManager = TerminalDisplayManager();
+
         self.model = Model(self);
-        self.view = View(textDisplayManager, self);
-        # self.view = View(guiDisplayManager, self);
+        self.view = View(displayManager, self);
         self.gameInPlay = False;
 
         self.newGame();
@@ -34,6 +38,7 @@ class Controller:
     def startGame(self):
         #main game loop
         #can be broken by setting self.gameInPlay to false
+        self.randomizePlayers();
         self.gameInPlay = True;
         # if self.model.firstGame == True:
         #     for num in range(self.countHumanPlayers()):
@@ -82,8 +87,9 @@ class Controller:
             # self.view.displayManager.drawBoard(self.model.board);
             # self.view.drawMenu(self.endMenu());
 
-        self.model.setNextActivePlayer();
-        self.model.randomizePortalsTest();
+        if(self.gameInPlay == True):
+            self.model.setNextActivePlayer();
+            self.model.randomizePortalsTest();
 
     def activePlayer(self):
         return self.model.getActivePlayer();
@@ -100,9 +106,8 @@ class Controller:
     def getPlayersList(self):
         return self.model.board.players
 
-
-def main(argv):
-    controller = Controller();
-
-if __name__ == "__main__":
-    main(sys.argv)
+    def randomizePlayers(self):
+        random.shuffle(self.model.getPlayers())
+        print("Play order was randomized, order is now:")
+        for player in self.model.getPlayers():
+            print(player.name)

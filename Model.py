@@ -133,3 +133,6 @@ class Model:
 
     def resetPlayers(self):
         self.resetBoard()
+
+    def getPlayers(self):
+        return self.board.players
