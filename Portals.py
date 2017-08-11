@@ -2,7 +2,6 @@ import sys
 from Controller import Controller
 
 def main(argv):
-    print(argv)
     if len(argv) > 1 and argv[1] == "-g":
         controller = Controller(graphical=True);
     else:

@@ -7,10 +7,12 @@ from View import View
 # Temp comment
 class Controller:
     def __init__(self, graphical):
+
         if graphical == True:
             displayManager = GraphicalDisplayManager();
         else:
             displayManager = TerminalDisplayManager();
+
         self.model = Model(self);
         self.view = View(displayManager, self);
         self.gameInPlay = False;

@@ -30,7 +30,10 @@ class Board:
         colored("@", "green"),
         colored("#", "blue"),
         colored("%", "magenta"),
-        colored("$", "yellow")
+        colored("$", "yellow"),
+        colored("&", "red"),
+        colored("*", "cyan"),
+        colored("!", "white"),
     ];
 
     maxPortals = 6; #max portals ever possible on the board

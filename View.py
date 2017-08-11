@@ -3,7 +3,7 @@ class View:
     def gameMenu(self):
         return {
             "heading": "It is " + self.controller.activePlayer().name + "'s turn ("
-                       + self.controller.activePlayer().token + ")",
+                       + str(self.controller.activePlayer().token) + ")",
             "options": [
                 {"name": "Roll Dice", "method": self.controller.takeTurn},
                 {"name": "Quit to Menu", "method": self.controller.quitToMenu}
