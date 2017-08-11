@@ -6,12 +6,13 @@ from Model import Model
 from View import View
 # Temp comment
 class Controller:
-    def __init__(self):
-        textDisplayManager = TerminalDisplayManager();
-        guiDisplayManager = GraphicalDisplayManager();
+    def __init__(self, graphical):
+        if graphical == True:
+            displayManager = GraphicalDisplayManager();
+        else:
+            displayManager = TerminalDisplayManager();
         self.model = Model(self);
-        self.view = View(textDisplayManager, self);
-        # self.view = View(guiDisplayManager, self);
+        self.view = View(displayManager, self);
         self.gameInPlay = False;
 
         self.newGame();
@@ -108,10 +109,3 @@ class Controller:
         print("Play order was randomized, order is now:")
         for player in self.model.getPlayers():
             print(player.name)
-
-
-def main(argv):
-    controller = Controller();
-
-if __name__ == "__main__":
-    main(sys.argv)
