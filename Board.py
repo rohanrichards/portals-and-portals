@@ -2,9 +2,6 @@
 
 from Tile import *
 from Player import Player
-from random import randint
-from random import sample
-
 
 import sys
 from random import randint
