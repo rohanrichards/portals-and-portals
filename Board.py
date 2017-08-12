@@ -2,9 +2,6 @@
 
 from Tile import *
 from Player import Player
-from random import randint
-from random import sample
-
 
 import sys
 from random import randint
@@ -33,12 +30,15 @@ class Board:
         colored("@", "green"),
         colored("#", "blue"),
         colored("%", "magenta"),
-        colored("$", "yellow")
+        colored("$", "yellow"),
+        colored("&", "red"),
+        colored("*", "cyan"),
+        colored("!", "white"),
     ];
 
     maxPortals = 6; #max portals ever possible on the board
     minPortals = 2; #min portals ever possible on the board
-    randomizePortalsChance = 100; #the percent chance to randomize portals each turn
+    randomizePortalsChance = 30; #the percent chance to randomize portals each turn
     # players = [];
 
     def __init__(self):

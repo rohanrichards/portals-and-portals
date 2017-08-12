@@ -18,6 +18,81 @@ class TerminalDisplayManager:
         # print("Created a TerminalDisplayManager instance");
         pass;
 
+    def drawSplashScreen(self, menuOptions):
+        self.drawMenu(menuOptions);
+
+    def drawPlayerSetupScreen(self, maxPlayers, playersList, tokens, selectedTokens):
+        while True:
+            userInput = input('How many players (0 - {})?'.format(maxPlayers));
+            try:
+                int(userInput)
+            except ValueError:
+                print("Please make a valid menu selection: ", end='')
+                continue
+            if int(userInput) not in range(0, maxPlayers + 1):
+                print("Please make a valid menu selection: ", end='')
+                continue
+            else:
+                break
+
+        for i in range(len(playersList)):
+            if i < int(userInput):
+                playersList[i].ai = False;
+            else:
+                playersList[i].ai = True;
+
+        for index, player in enumerate(playersList):
+            if player.ai != True:
+                self.setPlayerName(player);
+                self.setPlayerToken(player, tokens, selectedTokens);
+            else:
+                player.name = "Bot " + str(index)
+                print('Player {} is now known as {}'.format(index + 1, player.name))
+                for token in tokens:
+                    if token not in selectedTokens:
+                        player.token = token;
+                        selectedTokens.append(token);
+                        print('{} has been allocated {} for their game token '.format(player.name,
+                                                                                      player.token))
+                        break
+
+
+    def setPlayerName(self, player):
+        valid = False;
+        while valid == False:
+            player.name = input('{} enter your name: '.format(player.name));
+            if len(player.name) <= 10 and len(player.name) >= 1:
+                valid = True;
+                break;
+            print("Name must be between 1 and 10 characters");
+
+    def setPlayerToken(self, player, tokens, selectedTokens):
+        print("{} select your game token: ".format(player.name));
+        for index, token in enumerate(tokens):
+            if token not in selectedTokens:
+                print("{} {}  ".format((index + 1), token));
+            else:
+                print("{} {}  ".format((index + 1), '(taken)'));
+        valid = False
+        while valid == False:
+                try:
+                    playerInput = int(input("Enter token number: "));
+                    if tokens[playerInput - 1] in selectedTokens[:]:
+                        print('Token {} is not available, try again:'.format(tokens[playerInput - 1]));
+                        continue
+                    else:
+                        player.token = tokens[playerInput - 1];
+                        selectedTokens.append(tokens[playerInput - 1]);
+                        print("{} has selected {}".format((player.name), player.token));
+                        valid = True;
+                        break
+                except IndexError:
+                    print("Please make a valid menu selection: ", end='')
+                    continue
+                except ValueError:
+                    print("Please make a valid menu selection: ", end='')
+                    continue
+
     def drawTile(self, row, tile):
         # draws the requested row number of the tile
         # draws any relevant tile data (players present, tile number, portals etc)
@@ -113,7 +188,7 @@ class TerminalDisplayManager:
 
         #return "|   " + str(tile.tileNumber) + padding + "   ";
 
-    def drawBoard(self, board):
+    def drawBoard(self, board, menuOptions=None, isAi=False):
         # draws the game board
         # Params:
         #   board=instance of the board to draw (Board)
@@ -135,6 +210,12 @@ class TerminalDisplayManager:
                         index = col + (board.width * row);
                         self.drawTile(tileRow, board.tiles[index]);
                 sys.stdout.write("\n");
+
+        if isAi == True:
+            menuOptions["options"][0]["method"]()
+        else:
+            if menuOptions != None:
+                self.drawMenu(menuOptions)
 
     def drawMenu(self, menu):
         print(menu["heading"]);
@@ -159,7 +240,7 @@ class TerminalDisplayManager:
                 break
         option["method"]();
 
-    def drawEndGameScenario(self, playerlist, player):
+    def drawEndGameScenario(self, playerlist, player, menuOptions):
         maxlength = max(max(len(p.name) for p in playerlist), 8)+2
 
 
@@ -187,6 +268,7 @@ class TerminalDisplayManager:
             print("{0:{1}}".format(39 - p.location, maxlength), end='')
 
         print("\n")
+
 
         # print("\n\nWinner winner chicken dinner! Congratulations " + player.name);
         # print("\nGame Stats\n----------\n")
@@ -224,9 +306,5 @@ class TerminalDisplayManager:
 
 
         # test code to just run through the methods
-# this wont exist in prod and will get called by the view class
-# testClass = TerminalDisplayManager();
-# testClass.drawBoard(Board())
-# print("Player 1's turn (%)");
-# print("1. Roll Dice");
-# print("2. Quit Game");
+
+        self.drawMenu(menuOptions);

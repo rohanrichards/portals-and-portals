@@ -1,16 +1,24 @@
 import sys
+import random
 from TerminalDisplayManager import TerminalDisplayManager
+from GraphicalDisplayManager import GraphicalDisplayManager
 from Model import Model
 from View import View
 # Temp comment
 class Controller:
-    def __init__(self):
-        textDisplayManager = TerminalDisplayManager();
+    def __init__(self, graphical):
+
+        if graphical == True:
+            displayManager = GraphicalDisplayManager();
+        else:
+            displayManager = TerminalDisplayManager();
+
         self.model = Model(self);
-        self.view = View(textDisplayManager, self);
+        self.view = View(displayManager, self);
         self.gameInPlay = False;
 
         self.newGame();
+        # self.setupPlayers()
 
     def newGame(self):
         self.model.resetBoard();
@@ -24,27 +32,29 @@ class Controller:
         #starts a game again without going to the main menu
         self.model.resetTokens();
         self.model.resetActivePlayer();
+        self.model.resetPlayerStats();
         self.startGame();
 
     def startGame(self):
         #main game loop
         #can be broken by setting self.gameInPlay to false
-        self.model.resetBoard()
+        self.randomizePlayers();
         self.gameInPlay = True;
-        if self.model.firstGame == True:
-            for num in range(self.countHumanPlayers()):
-                self.view.setScene("setNames");
-                self.view.updateView(num);
-                self.view.setScene("setTokens")
-                self.view.updateView(num);
-            self.view.setScene("createAIPlayers");
-            self.view.updateView();
+        # if self.model.firstGame == True:
+        #     for num in range(self.countHumanPlayers()):
+        #         self.view.setScene("setNames");
+        #         self.view.updateView(num);
+        #         self.view.setScene("setTokens")
+        #         self.view.updateView(num);
+        #     self.view.setScene("createAIPlayers");
+        #     self.view.updateView();
         self.view.setScene("gameBoard");
         while self.gameInPlay:
             self.view.updateView();
 
     def setupPlayers(self):
         # print("setting up players");
+        self.model.resetPlayers();
         self.view.setScene("playerSetup");
         self.view.updateView();
         self.view.setScene("mainMenu");
@@ -73,12 +83,14 @@ class Controller:
             self.model.firstGame = False;
             self.view.setScene("endGame");
             self.view.updateView();
+            self.gameInPlay = False;
             # self.view.displayManager.drawBoard(self.model.board);
             # self.view.drawMenu(self.endMenu());
             return
 
-        self.model.setNextActivePlayer();
-        self.model.randomizePortalsTest();
+        if(self.gameInPlay == True):
+            self.model.setNextActivePlayer();
+            self.model.randomizePortalsTest();
 
         if player.ai:
             input("Press Enter to continue...")
@@ -98,9 +110,8 @@ class Controller:
     def getPlayersList(self):
         return self.model.board.players
 
-
-def main(argv):
-    controller = Controller();
-
-if __name__ == "__main__":
-    main(sys.argv)
+    def randomizePlayers(self):
+        random.shuffle(self.model.getPlayers())
+        print("Play order was randomized, order is now:")
+        for player in self.model.getPlayers():
+            print(player.name)

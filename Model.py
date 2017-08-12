@@ -124,3 +124,15 @@ class Model:
         for player in self.board.players:
             player.isActive = False;
         self.board.players[0].isActive = True;
+
+    def resetPlayerStats(self):
+        for player in self.board.players:
+            player.portalsactivated = 0;
+            player.tilesmoved = 0;
+            player.turncount = 0;
+
+    def resetPlayers(self):
+        self.resetBoard()
+
+    def getPlayers(self):
+        return self.board.players
