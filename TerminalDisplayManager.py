@@ -56,7 +56,6 @@ class TerminalDisplayManager:
                                                                                       player.token))
                         break
 
-
     def setPlayerName(self, player):
         valid = False;
         while valid == False:
@@ -80,6 +79,8 @@ class TerminalDisplayManager:
                     if tokens[playerInput - 1] in selectedTokens[:]:
                         print('Token {} is not available, try again:'.format(tokens[playerInput - 1]));
                         continue
+                    elif playerInput < 1:
+                        raise IndexError
                     else:
                         player.token = tokens[playerInput - 1];
                         selectedTokens.append(tokens[playerInput - 1]);
