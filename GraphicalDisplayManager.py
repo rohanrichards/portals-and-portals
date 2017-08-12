@@ -31,17 +31,18 @@ class GraphicalDisplayManager:
         lblPhoto = Label(self.splashFrame, image=image)
         lblPhoto.pack()
 
+        imgStart = PhotoImage(file="./images/redButtons/redButtonsStartGame.png")
+        imgQuit = PhotoImage(file="./images/redButtons/redButtonsQuit.png")
+
         bottomFrame = Frame(self.splashFrame)
         bottomFrame.pack(side=BOTTOM)
 
-        btnStart = Button(bottomFrame, text="New Game", fg="red", command=lambda: menuOptions["options"][0]["method"]())
+        btnStart = Button(bottomFrame, text="New Game", fg="red", command=lambda: menuOptions["options"][1]["method"]())
+        btnStart.config(image=imgStart)
         btnStart.pack(side=LEFT)
 
-        btnPlayers = Button(bottomFrame, text="Set Up Players", fg="red",
-                            command=lambda: menuOptions["options"][1]["method"]())
-        btnPlayers.pack(side=LEFT)
-
         btnQuit = Button(bottomFrame, text="Exit", fg="black", command=self.root.quit)
+        btnQuit.config(image=imgQuit)
         btnQuit.pack(side=LEFT)
 
         self.root.mainloop()
