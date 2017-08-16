@@ -14,9 +14,9 @@ class View:
         return {
             "heading": "Game Over!",
             "options": [
-                {"name": "Replay Game", "method": self.controller.replayGame},
-                {"name": "Main Menu", "method": self.controller.newGame},
-                {"name": "Quit Game", "method": self.controller.quitGame}
+                {"name": "Replay Game", "method": self.controller.replayGame, "image": "images/redButtons/redButtonsReplay.png"},
+                {"name": "Main Menu", "method": self.controller.newGame, "image": "images/redButtons/redButtonsMainMenu.png"},
+                {"name": "Quit Game", "method": self.controller.quitGame, "image": "images/redButtons/redButtonsQuit.png"}
             ]
         }
 
@@ -111,6 +111,7 @@ class View:
     #         return
 
     def drawGameScreen(self):
+        print("trying to call draw board")
         self.displayManager.drawBoard(self.controller.getGameBoard(),
                                       self.gameMenu(),
                                       self.controller.isActivePlayerAi(),);
@@ -122,9 +123,12 @@ class View:
     def drawEndGameScreen(self):
         playerlist = self.controller.getPlayersList()
         player = self.controller.activePlayer()
-        self.displayManager.drawBoard(self.controller.getGameBoard());
+        # self.displayManager.drawBoard(self.controller.getGameBoard());
         self.displayManager.drawEndGameScenario(playerlist, player, self.endMenu())
         # self.drawMenu(self.endMenu());
+
+    def quitGame(self):
+        self.displayManager.quitGame();
 
     def setScene(self, sceneName):
         # scenes are mainMenu, playerSetup, gameBoard, endGame
@@ -144,5 +148,7 @@ class View:
         #     self.updateView = self.drawAIPlayersScreen;
         elif sceneName == "endGame":
             self.updateView = self.drawEndGameScreen;
+        elif sceneName == "quit":
+            self.updateView = self.quitGame;
         else:
             print("Scene not found!")

@@ -14,13 +14,11 @@ class Board:
     # the default portals for a new board
     portals = [
         # portal format is origin, destination
-        Portal(3, 7),
-        Portal(6, 10),
-        Portal(14, 23),
-        Portal(21, 27),
-        Portal(18, 37),
-        Portal(25, 30),
-        Portal(35, 38),
+        Portal(3, 7, Portal.files[0]),
+        Portal(6, 10, Portal.files[1]),
+        Portal(14, 23, Portal.files[2]),
+        Portal(21, 27, Portal.files[3]),
+        Portal(18, 37, Portal.files[4])
     ]
 
     height = 5;
@@ -36,8 +34,8 @@ class Board:
         colored("!", "white"),
     ];
 
-    maxPortals = 6; #max portals ever possible on the board
-    minPortals = 2; #min portals ever possible on the board
+    maxPortals = 5; #max portals ever possible on the board
+    minPortals = 1; #min portals ever possible on the board
     randomizePortalsChance = 30; #the percent chance to randomize portals each turn
     # players = [];
 
@@ -123,7 +121,7 @@ class Board:
                 portalTailLocation = firstEnd;
             x = x + 2
 
-            self.portals.append(Portal(portalHeadLocation, portalTailLocation));
+            self.portals.append(Portal(portalHeadLocation, portalTailLocation, Portal.files[i]));
 
         self.setupPortals();
 

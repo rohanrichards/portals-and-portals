@@ -42,6 +42,9 @@ class Model:
         self.selectedTokens = [];
         self.board = Board();
 
+        #some debug code please remove
+        # self.movePlayerToTile(self.board.players[0], 38)
+
     def movePlayerBySpaces(self, player, spaces):
         if (player.location + spaces + 1) >= 40:
             moveTile = 40;

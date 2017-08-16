@@ -1,12 +1,17 @@
 from tkinter import *
 from tkinter import ttk
 from Dialog import *
+import tkinter as tk
+import math
 
 class GraphicalDisplayManager:
 
     def __init__(self):
+        self.debug = False
         self.root = Tk()
-        self.splashFrame = None
+        self.mainFrame = None
+        self.boardTileHeight = 95
+        self.boardTileWidth = 95
 
         self.tokenImages = [
             "./images/playerTokens/playerTokens_blueDisc.png",
@@ -19,29 +24,32 @@ class GraphicalDisplayManager:
         ]
 
     def drawSplashScreen(self, menuOptions):
-        if self.splashFrame:
-            self.splashFrame.destroy()
+        self.setupPlayers = menuOptions["options"][1]["method"];
+        self.startGame = menuOptions["options"][0]["method"];
+
+        if self.mainFrame:
+            self.mainFrame.destroy()
 
         self.root.title("Portals and Portals")
 
-        self.splashFrame = Frame(self.root)
-        self.splashFrame.pack()
+        self.mainFrame = Frame(self.root)
+        self.mainFrame.pack()
 
         image = PhotoImage(file="PortalsSplash.PNG")
-        lblPhoto = Label(self.splashFrame, image=image)
+        lblPhoto = Label(self.mainFrame, image=image)
         lblPhoto.pack()
 
         imgStart = PhotoImage(file="./images/redButtons/redButtonsStartGame.png")
         imgQuit = PhotoImage(file="./images/redButtons/redButtonsQuit.png")
 
-        bottomFrame = Frame(self.splashFrame)
+        bottomFrame = Frame(self.mainFrame)
         bottomFrame.pack(side=BOTTOM)
 
-        btnStart = Button(bottomFrame, text="New Game", fg="red", command=lambda: menuOptions["options"][1]["method"]())
+        btnStart = Button(bottomFrame, text="New Game", fg="red", command=self.setupPlayers)
         btnStart.config(image=imgStart)
         btnStart.pack(side=LEFT)
 
-        btnQuit = Button(bottomFrame, text="Exit", fg="black", command=self.root.quit)
+        btnQuit = Button(bottomFrame, text="Exit", fg="black", command=self.root.destroy)
         btnQuit.config(image=imgQuit)
         btnQuit.pack(side=LEFT)
 
@@ -54,8 +62,17 @@ class GraphicalDisplayManager:
         # menuOptions["options"][1]["method"]()
 
     def drawPlayerSetupScreen(self, maxPlayers, playersList, tokens, selectedTokens):
-        self.setNumberOfPlayers(maxPlayers, playersList)
-        self.setNameAndTokens(playersList, tokens, selectedTokens)
+        if self.debug == False:
+            self.setNumberOfPlayers(maxPlayers, playersList)
+            self.setNameAndTokens(playersList, tokens, selectedTokens)
+            self.startGame()
+        else:
+            for index, player in enumerate(playersList):
+                print(index)
+
+                player.token = int(index)
+                player.ai = False
+            self.startGame()
 
     def setNumberOfPlayers(self, maxPlayers, playersList):
         d = SetPlayersDialog(self.root, "How many players?")
@@ -148,52 +165,126 @@ class GraphicalDisplayManager:
         #                 break
 
     def drawBoard(self, board, menuOptions=None, isAi=False):
+        if menuOptions:
+            self.takeTurn = menuOptions["options"][0]["method"];
+
         print("drawing game board with GUI")
-        if self.splashFrame:
-            self.splashFrame.destroy()
+        if self.mainFrame:
+            self.mainFrame.destroy()
 
         self.root.title("Portals and Portals")
 
-        self.splashFrame = Frame(self.root)
-        self.splashFrame.pack()
+        self.mainFrame = Frame(self.root)
+        self.mainFrame.pack()
+
+        self.boardFrame = Frame(self.mainFrame, height=board.height * self.boardTileHeight,
+                                width=board.width * self.boardTileWidth)
+        self.boardFrame.pack()
+
+        self.buttonFrame = Frame(self.mainFrame)
+        self.buttonFrame.pack()
+
+        btnStart = Button(self.buttonFrame, text="New Game", fg="red", command=self.takeTurn)
+        btnStart.image = PhotoImage(file="images/dice/diceClickToRoll.png")
+        btnStart.config(image=btnStart.image)
+        btnStart.pack(side=RIGHT)
+
+        for index, player in enumerate(board.players):
+            image = PhotoImage(file=self.tokenImages[player.token])
+            nameLabel = Label(self.buttonFrame, text=player.name, padx=20, image=image, compound=CENTER)
+            nameLabel.image = image
+            nameLabel.pack(side=LEFT)
+            if player.isActive == True:
+                nameLabel.config(background="green")
+
+        self.drawTiles(board)
+
+        if isAi:
+            self.takeTurn()
 
         self.root.mainloop()
 
+    def drawTiles(self, board):
+        for row in range(0, board.height):
+            for col in range(0, board.width):
+                tileFrame = Frame(self.boardFrame,
+                                  height = self.boardTileHeight, width=self.boardTileWidth,
+                                  background="green", borderwidth=0, highlightthickness=0)
+                tiles = board.tiles
+                tile = tiles[(row * board.width) + (col)]
+                if tile.tileNumber == 1:
+                    tileFile = "images/tiles/tilesStartTile.png"
+                elif tile.tileNumber == board.width * board.height:
+                    tileFile = "images/tiles/tilesEndTile.png"
+                elif tile.tileNumber % 2 == 0:
+                    tileFile = "images/tiles/tilesBeigeTile.png"
+                else:
+                    tileFile = "images/tiles/tilesBrownTile.png"
+
+                tileFrame.canvas = tk.Canvas(tileFrame, width=self.boardTileWidth, height=self.boardTileHeight,
+                                        background="blue", borderwidth=0, highlightthickness=0)
+                tileFrame.canvas.pack()
+                tileFrame.canvas.image = PhotoImage(file=tileFile)
+                tileFrame.canvas.create_image(0,0, image=tileFrame.canvas.image, anchor='nw')
+
+                if row % 2:
+                    index = (board.width) - (col + 1);
+                    x = index * self.boardTileWidth
+                else:
+                    x = col * self.boardTileWidth
+                y = row * self.boardTileHeight
+                tileFrame.place(x=x, y=y)
+
+                self.drawPortalsOnTile(tile, tileFrame.canvas)
+                self.drawDirectionArrows(tile, tileFrame.canvas)
+                self.drawPlayerTokensOnTile(tile, tileFrame.canvas)
+
+                tokenText = tileFrame.canvas.create_text(10, 10, anchor="nw")
+                tileFrame.canvas.itemconfig(tokenText, text=tile.tileNumber)
+
+    def drawDirectionArrows(self, tile, canvas):
+        if tile.tileNumber > 1 and tile.tileNumber < 40:
+            if tile.tileNumber % 8 == 0:
+                arrowPath = "images/arrows/arrowDown.png"
+            elif math.ceil(tile.tileNumber / 8) % 2 == 0:
+                arrowPath = "images/arrows/arrowLeft.png"
+            else:
+                arrowPath = "images/arrows/arrowRight.png"
+            canvas.arrow = PhotoImage(file=arrowPath)
+            canvas.create_image(90, 90, image=canvas.arrow, anchor="se")
+
+    def drawPlayerTokensOnTile(self, tile, canvas):
+        canvas.token = []
+        players = tile.players
+        for count, player in enumerate(players):
+            tokenFile = self.tokenImages[player.token]
+
+            tokenImage = PhotoImage(file=tokenFile).subsample(2, 2)
+            canvas.token.append(tokenImage)
+            x = count * tokenImage.width()
+            y = 20
+            if count > 1:
+                y += tokenImage.height()
+                x = (count - 2)* tokenImage.width()
+            canvas.create_image(20+x, y, image=tokenImage, anchor="nw")
+
+    def drawPortalsOnTile(self, tile, canvas):
+        if tile.portal:
+            portalImage = PhotoImage(file=tile.portal.image)
+            canvas.portal = portalImage
+            canvas.create_image(0, 0, image=canvas.portal, anchor="nw")
+
     def drawEndGameScenario(self, playerList, player, menuOptions):
         print("drawing end game with GUI")
+        d = EndGameScreen(self.root, "Winner Winner Chicken Dinner!", {
+            "player": player,
+            "menuOptions": menuOptions,
+            "players": playerList
+        })
         pass
 
-
-
-# class Splash:
-#
-#     def __init__(self, master):
-#
-#         frame = Frame(master)
-#         frame.pack()
-#
-#         bottomFrame = Frame(master)
-#         bottomFrame.pack(side=BOTTOM)
-#
-#         self.splash = PhotoImage(file="PortalsSplash.PNG")
-#         self.lblPhoto = Label(frame, image=self.splash)
-#         self.lblPhoto.pack()
-#
-#         self.btnStart = Button(bottomFrame, text="New Game", fg="red", command=self.startGame)
-#         self.btnStart.pack(side=LEFT)
-#
-#         self.btnPlayers = Button(bottomFrame, text="Set Up Players", fg="red", command=self.playerSetup)
-#         self.btnPlayers.pack(side=LEFT)
-#
-#         self.btnQuit = Button(bottomFrame, text="Exit", fg="black", command=frame.quit)
-#         self.btnQuit.pack(side=LEFT)
-#
-#     def startGame(self):
-#         print("Starting Game!")
-#
-#     def playerSetup(self):
-#         print("Setting Up Players!")
-#
-# root = Tk()
-# b = Splash(root)
-# root.mainloop()
+    def quitGame(self):
+        print("quitting game in manager")
+        self.mainFrame.destroy()
+        self.root.quit()
+        self.root.destroy()

@@ -84,6 +84,7 @@ class Dialog(Toplevel):
         self.apply()
 
         self.cancel()
+        print("ok method called")
 
     def cancel(self, event=None):
 
@@ -178,3 +179,36 @@ class SelectTokensDialog(Dialog):
         returnData = name, token, tokenData
         self.result = returnData
         # print first, second # or something
+
+class EndGameScreen(Dialog):
+    def body(self, master, data = None):
+
+        Label(master, text="Congratulations " + data["player"].name + "!").grid(row=0, columnspan=5)
+        # include any code here to draw the end game stats
+        Label(master, text="Game Stats").grid(row=1)
+        Label(master, text="Player:").grid(row=2)
+        Label(master, text="Turns:").grid(row=3)
+        Label(master, text="Portals:").grid(row=4)
+        Label(master, text="Tiles:").grid(row=5)
+        Label(master, text="Remaining:").grid(row=6)
+
+        for index, player in enumerate(data["players"]):
+            Label(master, text=player.name).grid(row=2, column=1+index)
+            Label(master, text=player.turncount).grid(row=3, column=1 + index)
+            Label(master, text=player.portalsactivated).grid(row=4, column=1 + index)
+            Label(master, text=player.tilesmoved).grid(row=5, column=1 + index)
+            Label(master, text=39 - player.location).grid(row=6, column=1 + index)
+
+    def buttonbox(self, data = None):
+        def exit(method):
+            self.cancel();
+            method();
+
+        box = Frame(self)
+        for index, option in enumerate(data['menuOptions']["options"]):
+            image = PhotoImage(file=option["image"])
+            b = ttk.Button(box, image=image, command=lambda option=option:exit(option["method"]))
+            b.image = image
+            b.pack(side=LEFT)
+
+        box.pack()

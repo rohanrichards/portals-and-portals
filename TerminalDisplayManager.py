@@ -309,3 +309,7 @@ class TerminalDisplayManager:
         # test code to just run through the methods
 
         self.drawMenu(menuOptions);
+
+    def quitGame(self):
+        #this is just for the graphical manager to play nice
+        pass

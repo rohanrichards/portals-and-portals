@@ -69,6 +69,8 @@ class Controller:
         print("quitting game");
         #break the main game loop
         self.gameInPlay = False;
+        self.view.setScene("quit")
+        self.view.updateView()
 
     def takeTurn(self):
         spaces = self.model.rollDice();
@@ -80,6 +82,7 @@ class Controller:
 
         #end game check here
         if player.location == 39:
+            print("a player has won the game")
             self.model.firstGame = False;
             self.view.setScene("endGame");
             self.view.updateView();
@@ -92,8 +95,10 @@ class Controller:
             self.model.setNextActivePlayer();
             self.model.randomizePortalsTest();
 
-        if player.ai:
-            input("Press Enter to continue...")
+        self.view.updateView();
+
+        # if player.ai:
+        #     input("Press Enter to continue...")
 
     def activePlayer(self):
         return self.model.getActivePlayer();

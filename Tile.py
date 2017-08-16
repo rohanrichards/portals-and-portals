@@ -1,8 +1,16 @@
 class Portal:
     # very simple class to define a portal as an object
-    def __init__(self, origin, dest):
+    files = [
+        "images/portals/portalBurgundy.png",
+        "images/portals/portalCyan.png",
+        "images/portals/portalGreen.png",
+        "images/portals/portalRed.png",
+        "images/portals/portalYellow.png",
+    ]
+    def __init__(self, origin, dest, image=None):
         self.origin = origin;
         self.destination = dest;
+        self.image = image
 
 class Tile():
     # Things declared here are considered *class* variables
