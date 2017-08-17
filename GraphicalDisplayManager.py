@@ -197,11 +197,13 @@ class GraphicalDisplayManager:
             except Exception:
                 pass
 
+            self.buttonFrame.nameLabels = []
             for index, player in enumerate(board.players):
                 image = PhotoImage(file=self.tokenImages[player.token])
                 nameLabel = Label(self.buttonFrame, text=player.name, padx=20, image=image, compound=CENTER)
                 nameLabel.image = image
                 nameLabel.pack(side=LEFT)
+                self.buttonFrame.nameLabels.append(nameLabel)
                 if player.isActive == True:
                     nameLabel.config(background="green")
             self.scene = "game"
@@ -209,7 +211,6 @@ class GraphicalDisplayManager:
         if isAi:
             self.drawTiles(board)
             self.takeTurn()
-            self.drawTiles(board)
 
         # self.root.mainloop()
         if self.renderLoopRunning == False:
@@ -218,6 +219,13 @@ class GraphicalDisplayManager:
                 #redraw tiles
                 self.renderLoopRunning = True
                 self.drawTiles(board)
+                for index, player in enumerate(board.players):
+                    if player.isActive == True:
+                        # print("setting label " + str(index) + " green")
+                        self.buttonFrame.nameLabels[index].config(background="green")
+                    else:
+                        # print("setting label " + str(index) + " white")
+                        self.buttonFrame.nameLabels[index].config(background="white")
                 self.root.update()
                 self.root.update_idletasks()
                 time.sleep(0.01)
