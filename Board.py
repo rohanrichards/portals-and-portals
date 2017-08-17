@@ -58,6 +58,7 @@ class Board:
             self.players.append(player);
             self.tiles[0].players.append(player);
 
+
         #selects a random player to begin the game.
         self.players[randint(0,3)].isActive = True
         self.setupPortals();

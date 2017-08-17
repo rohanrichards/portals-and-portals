@@ -3,6 +3,7 @@ from tkinter import ttk
 from Dialog import *
 import tkinter as tk
 import math
+import time
 
 class GraphicalDisplayManager:
 
@@ -12,6 +13,8 @@ class GraphicalDisplayManager:
         self.mainFrame = None
         self.boardTileHeight = 95
         self.boardTileWidth = 95
+        self.renderLoopRunning = False
+        self.scene = "main"
 
         self.tokenImages = [
             "./images/playerTokens/playerTokens_blueDisc.png",
@@ -165,51 +168,76 @@ class GraphicalDisplayManager:
         #                 break
 
     def drawBoard(self, board, menuOptions=None, isAi=False):
+        self.board = board
         if menuOptions:
             self.takeTurn = menuOptions["options"][0]["method"];
 
         print("drawing game board with GUI")
-        if self.mainFrame:
+        if self.scene != "game":
             self.mainFrame.destroy()
+            self.root.title("Portals and Portals")
 
-        self.root.title("Portals and Portals")
+            self.mainFrame = Frame(self.root)
+            self.mainFrame.pack()
 
-        self.mainFrame = Frame(self.root)
-        self.mainFrame.pack()
+            self.boardFrame = Frame(self.mainFrame, height=board.height * self.boardTileHeight,
+                                    width=board.width * self.boardTileWidth)
+            self.boardFrame.pack()
 
-        self.boardFrame = Frame(self.mainFrame, height=board.height * self.boardTileHeight,
-                                width=board.width * self.boardTileWidth)
-        self.boardFrame.pack()
+            self.buttonFrame = Frame(self.mainFrame)
+            self.buttonFrame.pack()
 
-        self.buttonFrame = Frame(self.mainFrame)
-        self.buttonFrame.pack()
+            btnStart = Button(self.buttonFrame, text="New Game", fg="red", command=self.takeTurn)
+            btnStart.image = PhotoImage(file="images/dice/diceClickToRoll.png")
+            btnStart.config(image=btnStart.image)
+            btnStart.pack(side=RIGHT)
 
-        btnStart = Button(self.buttonFrame, text="New Game", fg="red", command=self.takeTurn)
-        btnStart.image = PhotoImage(file="images/dice/diceClickToRoll.png")
-        btnStart.config(image=btnStart.image)
-        btnStart.pack(side=RIGHT)
+            try:
+                del self.tileFrames
+            except Exception:
+                pass
 
-        for index, player in enumerate(board.players):
-            image = PhotoImage(file=self.tokenImages[player.token])
-            nameLabel = Label(self.buttonFrame, text=player.name, padx=20, image=image, compound=CENTER)
-            nameLabel.image = image
-            nameLabel.pack(side=LEFT)
-            if player.isActive == True:
-                nameLabel.config(background="green")
-
-        self.drawTiles(board)
+            for index, player in enumerate(board.players):
+                image = PhotoImage(file=self.tokenImages[player.token])
+                nameLabel = Label(self.buttonFrame, text=player.name, padx=20, image=image, compound=CENTER)
+                nameLabel.image = image
+                nameLabel.pack(side=LEFT)
+                if player.isActive == True:
+                    nameLabel.config(background="green")
+            self.scene = "game"
 
         if isAi:
+            self.drawTiles(board)
             self.takeTurn()
+            self.drawTiles(board)
 
-        self.root.mainloop()
+        # self.root.mainloop()
+        if self.renderLoopRunning == False:
+            print("starting new render loop")
+            while True:
+                #redraw tiles
+                self.renderLoopRunning = True
+                self.drawTiles(board)
+                self.root.update()
+                self.root.update_idletasks()
+                time.sleep(0.01)
 
     def drawTiles(self, board):
+        try:
+            self.tileFrames
+        except AttributeError:
+            self.tileFrames = []
+            self.setupTiles(board)
+
+        for tile in board.tiles:
+            canvas = self.tileFrames[tile.tileNumber - 1].canvas
+            self.drawPortalsOnTile(tile, canvas)
+            self.drawPlayerTokensOnTile(tile, canvas)
+
+    def setupTiles(self, board):
+        print("creating tile canvases")
         for row in range(0, board.height):
             for col in range(0, board.width):
-                tileFrame = Frame(self.boardFrame,
-                                  height = self.boardTileHeight, width=self.boardTileWidth,
-                                  background="green", borderwidth=0, highlightthickness=0)
                 tiles = board.tiles
                 tile = tiles[(row * board.width) + (col)]
                 if tile.tileNumber == 1:
@@ -221,11 +249,16 @@ class GraphicalDisplayManager:
                 else:
                     tileFile = "images/tiles/tilesBrownTile.png"
 
-                tileFrame.canvas = tk.Canvas(tileFrame, width=self.boardTileWidth, height=self.boardTileHeight,
-                                        background="blue", borderwidth=0, highlightthickness=0)
-                tileFrame.canvas.pack()
-                tileFrame.canvas.image = PhotoImage(file=tileFile)
-                tileFrame.canvas.create_image(0,0, image=tileFrame.canvas.image, anchor='nw')
+                tileFrame = Frame(self.boardFrame,
+                                  height=self.boardTileHeight, width=self.boardTileWidth,
+                                  background="green", borderwidth=0, highlightthickness=0)
+                canvas = tk.Canvas(tileFrame, width=self.boardTileWidth, height=self.boardTileHeight,
+                                   background="blue", borderwidth=0, highlightthickness=0)
+                self.tileFrames.append(tileFrame)
+                tileFrame.canvas = canvas
+                canvas.pack()
+                canvas.image = PhotoImage(file=tileFile)
+                canvas.create_image(0, 0, image=canvas.image, anchor='nw')
 
                 if row % 2:
                     index = (board.width) - (col + 1);
@@ -235,12 +268,9 @@ class GraphicalDisplayManager:
                 y = row * self.boardTileHeight
                 tileFrame.place(x=x, y=y)
 
-                self.drawPortalsOnTile(tile, tileFrame.canvas)
-                self.drawDirectionArrows(tile, tileFrame.canvas)
-                self.drawPlayerTokensOnTile(tile, tileFrame.canvas)
-
-                tokenText = tileFrame.canvas.create_text(10, 10, anchor="nw")
-                tileFrame.canvas.itemconfig(tokenText, text=tile.tileNumber)
+                self.drawDirectionArrows(tile, canvas)
+                tokenText = canvas.create_text(10, 10, anchor="nw")
+                canvas.itemconfig(tokenText, text=tile.tileNumber)
 
     def drawDirectionArrows(self, tile, canvas):
         if tile.tileNumber > 1 and tile.tileNumber < 40:
@@ -254,34 +284,49 @@ class GraphicalDisplayManager:
             canvas.create_image(90, 90, image=canvas.arrow, anchor="se")
 
     def drawPlayerTokensOnTile(self, tile, canvas):
-        canvas.token = []
+        try:
+            for token in canvas.token:
+                canvas.delete(token)
+            canvas.token = []
+        except AttributeError:
+            canvas.token = []
+
         players = tile.players
         for count, player in enumerate(players):
             tokenFile = self.tokenImages[player.token]
-
             tokenImage = PhotoImage(file=tokenFile).subsample(2, 2)
-            canvas.token.append(tokenImage)
+            player.tokenImage = tokenImage
             x = count * tokenImage.width()
             y = 20
             if count > 1:
                 y += tokenImage.height()
                 x = (count - 2)* tokenImage.width()
-            canvas.create_image(20+x, y, image=tokenImage, anchor="nw")
+            image = canvas.create_image(20+x, y, image=tokenImage, anchor="nw")
+            canvas.token.append(image)
 
     def drawPortalsOnTile(self, tile, canvas):
+        try:
+            canvas.delete(canvas.portal)
+            canvas.portal = None
+        except AttributeError:
+            pass
         if tile.portal:
             portalImage = PhotoImage(file=tile.portal.image)
-            canvas.portal = portalImage
-            canvas.create_image(0, 0, image=canvas.portal, anchor="nw")
+            tile.portalImage = portalImage
+            canvas.portal = canvas.create_image(0, 0, image=portalImage, anchor="nw")
+            # canvas.portal.image = portalImage
+
 
     def drawEndGameScenario(self, playerList, player, menuOptions):
         print("drawing end game with GUI")
+        self.drawTiles(self.board)
+        self.scene = "end"
+        self.renderLoopRunning = False
         d = EndGameScreen(self.root, "Winner Winner Chicken Dinner!", {
             "player": player,
             "menuOptions": menuOptions,
             "players": playerList
         })
-        pass
 
     def quitGame(self):
         print("quitting game in manager")

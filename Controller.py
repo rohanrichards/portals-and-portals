@@ -38,6 +38,9 @@ class Controller:
     def startGame(self):
         #main game loop
         #can be broken by setting self.gameInPlay to false
+
+        # self.model.movePlayerToTile(self.getPlayersList()[0], 38)
+
         self.randomizePlayers();
         self.gameInPlay = True;
         # if self.model.firstGame == True:
@@ -84,6 +87,7 @@ class Controller:
         if player.location == 39:
             print("a player has won the game")
             self.model.firstGame = False;
+            # self.view.updateView();
             self.view.setScene("endGame");
             self.view.updateView();
             self.gameInPlay = False;
