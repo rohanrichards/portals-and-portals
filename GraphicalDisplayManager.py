@@ -172,7 +172,6 @@ class GraphicalDisplayManager:
         if menuOptions:
             self.takeTurn = menuOptions["options"][0]["method"];
 
-        print("drawing game board with GUI")
         if self.scene != "game":
             self.mainFrame.destroy()
             self.root.title("Portals and Portals")
@@ -197,11 +196,13 @@ class GraphicalDisplayManager:
             except Exception:
                 pass
 
+            self.buttonFrame.nameLabels = []
             for index, player in enumerate(board.players):
                 image = PhotoImage(file=self.tokenImages[player.token])
                 nameLabel = Label(self.buttonFrame, text=player.name, padx=20, image=image, compound=CENTER)
                 nameLabel.image = image
                 nameLabel.pack(side=LEFT)
+                self.buttonFrame.nameLabels.append(nameLabel)
                 if player.isActive == True:
                     nameLabel.config(background="green")
             self.scene = "game"
@@ -209,15 +210,20 @@ class GraphicalDisplayManager:
         if isAi:
             self.drawTiles(board)
             self.takeTurn()
-            self.drawTiles(board)
 
         # self.root.mainloop()
         if self.renderLoopRunning == False:
-            print("starting new render loop")
             while True:
                 #redraw tiles
                 self.renderLoopRunning = True
                 self.drawTiles(board)
+                for index, player in enumerate(board.players):
+                    if player.isActive == True:
+                        # print("setting label " + str(index) + " green")
+                        self.buttonFrame.nameLabels[index].config(background="green")
+                    else:
+                        # print("setting label " + str(index) + " white")
+                        self.buttonFrame.nameLabels[index].config(background="white")
                 self.root.update()
                 self.root.update_idletasks()
                 time.sleep(0.01)
@@ -235,7 +241,6 @@ class GraphicalDisplayManager:
             self.drawPlayerTokensOnTile(tile, canvas)
 
     def setupTiles(self, board):
-        print("creating tile canvases")
         for row in range(0, board.height):
             for col in range(0, board.width):
                 tiles = board.tiles
@@ -318,7 +323,6 @@ class GraphicalDisplayManager:
 
 
     def drawEndGameScenario(self, playerList, player, menuOptions):
-        print("drawing end game with GUI")
         self.drawTiles(self.board)
         self.scene = "end"
         self.renderLoopRunning = False
@@ -329,7 +333,6 @@ class GraphicalDisplayManager:
         })
 
     def quitGame(self):
-        print("quitting game in manager")
         self.mainFrame.destroy()
         self.root.quit()
         self.root.destroy()

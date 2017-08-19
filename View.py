@@ -111,7 +111,6 @@ class View:
     #         return
 
     def drawGameScreen(self):
-        print("trying to call draw board")
         self.displayManager.drawBoard(self.controller.getGameBoard(),
                                       self.gameMenu(),
                                       self.controller.isActivePlayerAi(),);
