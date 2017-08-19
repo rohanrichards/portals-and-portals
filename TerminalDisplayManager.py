@@ -194,6 +194,8 @@ class TerminalDisplayManager:
         # Params:
         #   board=instance of the board to draw (Board)
 
+        input("Press Enter to continue...")
+
         for row in range(0, board.height):
             #for each row of tiles
             for tileRow in range(0, self.tileHeight):

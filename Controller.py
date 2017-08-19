@@ -102,7 +102,7 @@ class Controller:
         self.view.updateView();
 
         # if player.ai:
-        #     input("Press Enter to continue...")
+        #
 
     def activePlayer(self):
         return self.model.getActivePlayer();

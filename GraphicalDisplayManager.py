@@ -172,7 +172,6 @@ class GraphicalDisplayManager:
         if menuOptions:
             self.takeTurn = menuOptions["options"][0]["method"];
 
-        print("drawing game board with GUI")
         if self.scene != "game":
             self.mainFrame.destroy()
             self.root.title("Portals and Portals")
@@ -214,7 +213,6 @@ class GraphicalDisplayManager:
 
         # self.root.mainloop()
         if self.renderLoopRunning == False:
-            print("starting new render loop")
             while True:
                 #redraw tiles
                 self.renderLoopRunning = True
@@ -243,7 +241,6 @@ class GraphicalDisplayManager:
             self.drawPlayerTokensOnTile(tile, canvas)
 
     def setupTiles(self, board):
-        print("creating tile canvases")
         for row in range(0, board.height):
             for col in range(0, board.width):
                 tiles = board.tiles
@@ -326,7 +323,6 @@ class GraphicalDisplayManager:
 
 
     def drawEndGameScenario(self, playerList, player, menuOptions):
-        print("drawing end game with GUI")
         self.drawTiles(self.board)
         self.scene = "end"
         self.renderLoopRunning = False
@@ -337,7 +333,6 @@ class GraphicalDisplayManager:
         })
 
     def quitGame(self):
-        print("quitting game in manager")
         self.mainFrame.destroy()
         self.root.quit()
         self.root.destroy()
