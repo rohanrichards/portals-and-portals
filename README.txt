@@ -103,5 +103,4 @@ TABLE OF CONTENTS
 	4)	Known Issues
 	------------
 
-	GUI has been partially delivered with splash screen and graphics 
-	delivered. (TBA)
+	No animations have been included in the game distribution. Will be considered in a future release (v2).
